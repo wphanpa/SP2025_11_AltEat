@@ -4,7 +4,6 @@ import circle from "../assets/circle.png";
 import recipe from "../assets/recipe.png";
 import context from "../assets/context.png";
 import subs from "../assets/subs.png";
-import { useNavigate } from "react-router-dom";
 import RecipeCard from "../Component/RecipeCard.tsx";
 import { recommendedRecipes } from "../data/recipe.tsx";
 
@@ -59,7 +58,7 @@ function HomePage() {
                   className="px-8 py-5 h-[50px] w-[820px] bg-white rounded-[20px] text-[16px] outline-[1.5px] shadow-[0_8px_4px_rgba(0,0,0,0.25)]"
                 />{" "}
                 <br />
-                <button type="submit">
+                <button type="submit" className="cursor-pointer">
                   <div className="flex justify-center items-center h-[50px] w-[130px] gap-3 bg-[#FFE6DD] rounded-[30px] outline-[1.5px]">
                     <p className="text-[20px]">Send</p>
                     <img src={send} className="w-[26px]" />

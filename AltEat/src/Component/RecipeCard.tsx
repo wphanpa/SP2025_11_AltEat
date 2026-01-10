@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { recommendedRecipes } from "../data/recipe";
 import { Heart } from "lucide-react";
 
 interface Recipe {
@@ -22,13 +21,14 @@ function RecipeCard({ recipes }: RecipeCardProps) {
       <div className="grid grid-cols-3 gap-12 w-full">
         {recipes.map((recipe) => (
           <div key={recipe.id} className="bg-white rounded-2xl overflow-hidden">
-            {/* Image */}
+            {/* Recipe Image */}
             <div className="relative">
               <img
                 src={recipe.image}
                 alt={recipe.title}
-                className="w-full h-[180px]"
+                className="w-full h-45"
               />
+              {/* Favorite Button */}
               <button className="absolute top-2 right-2">
                 <Heart
                   className={`w-8 h-8 ${
