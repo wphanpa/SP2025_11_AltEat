@@ -1,5 +1,6 @@
 import Navbar from "../Component/Navbar"
 import { Heart } from "lucide-react"
+import { recommendedRecipes } from "../data/recipe"
 
 const recipeData = {
   title: "Creamy Garlic Shrimp Pasta",
@@ -39,30 +40,6 @@ const recipeData = {
     iron: "3mg",
   },
 }
-
-const recommendedRecipes = [
-  {
-    id: 1,
-    title: "Crunchy Fried Shrimp",
-    image: "/crispy-fried-shrimp-with-dipping-sauce.jpg",
-    tags: ["flour", "shrimp", "fry"],
-    isFavorite: true,
-  },
-  {
-    id: 2,
-    title: "Easy Shrimp Fried Rice",
-    image: "/shrimp-fried-rice-in-bowl.jpg",
-    tags: ["rice", "shrimp", "fry"],
-    isFavorite: false,
-  },
-  {
-    id: 3,
-    title: "Mexican Shrimp Cocktail",
-    image: "/mexican-shrimp-cocktail-with-avocado.jpg",
-    tags: ["flour", "shrimp", "fry"],
-    isFavorite: true,
-  },
-]
 
 export default function RecipeDetailPage() {
   return (
@@ -155,7 +132,7 @@ export default function RecipeDetailPage() {
                     className="w-full h-40 object-cover rounded-lg"
                   />
                   <button className="absolute top-2 right-2">
-                    <Heart className={`w-6 h-6 ${recipe.isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
+                    <Heart className={`w-6 h-6 ${recipe.isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 fill-white"}`} />
                   </button>
                 </div>
                 <div className="py-3">

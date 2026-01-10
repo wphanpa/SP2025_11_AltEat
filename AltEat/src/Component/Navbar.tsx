@@ -1,4 +1,3 @@
-import "../index.css";
 import fav from "../assets/fav.png";
 import user from "../assets/user.png";
 
