@@ -1,9 +1,11 @@
-import Navbar from "../Component/Navbar";
-import RecipeCard from "../Component/RecipeCard";
+import Navbar from "../component/Navbar";
+import RecipeCard from "../component/RecipeCard";
 import { recommendedRecipes } from "../data/recipe";
 
 function FavoritePage() {
-  const favoriteRecipe = recommendedRecipes.filter((recipe) => recipe.isFavorite);
+  const favoriteRecipe = recommendedRecipes.filter(
+    (recipe) => recipe.isFavorite
+  );
   return (
     <>
       <div className="min-h-screen bg-[#FFEDDD]">

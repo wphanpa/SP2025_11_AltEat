@@ -1,5 +1,5 @@
-import Navbar from "../Component/Navbar";
-import SearchSideBar from "../Component/SearchSideBar";
+import Navbar from "../component/Navbar";
+import SearchSideBar from "../component/SearchSideBar";
 import { ingredientFilter } from "../data/ingredientFilter";
 
 function IngredientSearchpage() {

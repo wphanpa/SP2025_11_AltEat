@@ -1,10 +1,10 @@
-import Navbar from "../Component/Navbar.tsx";
+import Navbar from "../component/Navbar.tsx";
 import send from "../assets/send.png";
 import circle from "../assets/circle.png";
 import recipe from "../assets/recipe.png";
 import context from "../assets/context.png";
 import subs from "../assets/subs.png";
-import RecipeCard from "../Component/RecipeCard.tsx";
+import RecipeCard from "../component/RecipeCard.tsx";
 import { recommendedRecipes } from "../data/recipe.tsx";
 
 function HomePage() {

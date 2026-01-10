@@ -20,7 +20,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
     <>
       <div className="grid grid-cols-3 gap-12 w-full">
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="bg-white rounded-2xl overflow-hidden">
+          <div key={recipe.id} className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_2px_rgba(0,0,0,0.25)]">
             {/* Recipe Image */}
             <div className="relative">
               <img
@@ -58,7 +58,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
               </div>
               {/* More Button */}
               <button
-                onClick={() => navigate(`/recipes/${recipe.id}`)}
+                onClick={() => navigate(`/recipe/${recipe.id}`)}
                 className="text-[#694900] text-[16px] px-6 py-1 bg-[#ECECEC] rounded-3xl my-4 cursor-pointer"
               >
                 More

@@ -1,8 +1,8 @@
-import Navbar from '../Component/Navbar';
-import { useRecommendedRecipes } from '../hooks/useRecommendedRecipes';
-import { Heart } from "lucide-react"
-import { useSupabaseFetch } from '../hooks/useSupabaseFetch';
-import { Link, useParams } from 'react-router-dom';
+import Navbar from "../component/Navbar";
+import { useRecommendedRecipes } from "../hooks/useRecommendedRecipes";
+import { Heart } from "lucide-react";
+import { useSupabaseFetch } from "../hooks/useSupabaseFetch";
+import { Link, useParams } from "react-router-dom";
 
 interface Recipe {
   idx: number;
@@ -23,39 +23,35 @@ interface Recipe {
   img_src: string;
 }
 
-export default function RecipeDetailPage() {;
+export default function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
 
-  const { data: recipe, loading, error } = useSupabaseFetch<Recipe>(
-    'recipe_staging',
-    id
-  );
+  const {
+    data: recipe,
+    loading,
+    error,
+  } = useSupabaseFetch<Recipe>("recipe_staging", id);
 
-  const { 
-    recipes: recommendedRecipes, 
-    loading: recommendedLoading 
-  } = useRecommendedRecipes(
-    recipe?.id || 0, 
-    recipe?.cuisine_path || ''
-  );
+  const { recipes: recommendedRecipes, loading: recommendedLoading } =
+    useRecommendedRecipes(recipe?.id || 0, recipe?.cuisine_path || "");
 
   // Parse ingredients string into array
   const parseIngredients = (ingredientsString: string) => {
     if (!ingredientsString) return [];
-    return ingredientsString.split(',').map((item: string) => item.trim());
+    return ingredientsString.split(",").map((item: string) => item.trim());
   };
 
   // Parse directions string into steps array
   const parseDirections = (directionsString: string) => {
     if (!directionsString) return [];
-    return directionsString.split('\n').filter((step: string) => step.trim());
+    return directionsString.split("\n").filter((step: string) => step.trim());
   };
 
   // Parse tags from cuisine_path
   const parseTags = (cuisinePath: string) => {
     if (!cuisinePath) return [];
     return cuisinePath
-      .split('/')
+      .split("/")
       .filter((tag: string) => tag.trim())
       .slice(0, 3);
   };
@@ -120,7 +116,10 @@ export default function RecipeDetailPage() {;
           )}
 
           {/* Timing & Servings Info */}
-          {(recipe.prep_time || recipe.cook_time || recipe.total_time || recipe.servings) && (
+          {(recipe.prep_time ||
+            recipe.cook_time ||
+            recipe.total_time ||
+            recipe.servings) && (
             <div className="flex gap-6 mb-8 justify-center flex-wrap text-sm">
               {recipe.prep_time && (
                 <div className="flex items-center gap-2">
@@ -159,7 +158,7 @@ export default function RecipeDetailPage() {;
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = '/placeholder.svg';
+                    target.src = "/placeholder.svg";
                   }}
                 />
               </div>
@@ -170,7 +169,7 @@ export default function RecipeDetailPage() {;
                 Ingredients
               </h2>
               <ul className="space-y-2">
-                {ingredients.map((ingredient,index) => (
+                {ingredients.map((ingredient, index) => (
                   <li key={index} className="text-[#562C0C] text-sm">
                     • {ingredient}
                   </li>
@@ -218,7 +217,7 @@ export default function RecipeDetailPage() {;
           <h2 className="text-xl font-semibold text-black mb-6">
             Recommended recipes
           </h2>
-          
+
           {recommendedLoading ? (
             <div className="text-center py-8">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-[#F5C55A] rounded-full animate-spin mx-auto"></div>
@@ -228,10 +227,10 @@ export default function RecipeDetailPage() {;
             <div className="space-y-6">
               {recommendedRecipes.map((recipeItem) => {
                 const recipeTags = parseTags(recipeItem.cuisine_path);
-                
+
                 return (
-                  <Link 
-                    key={recipeItem.id} 
+                  <Link
+                    key={recipeItem.id}
                     to={`/recipe/${recipeItem.id}`}
                     className="block bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
                   >
@@ -242,10 +241,10 @@ export default function RecipeDetailPage() {;
                         className="w-full h-40 object-cover rounded-lg"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = '/placeholder.svg';
+                          target.src = "/placeholder.svg";
                         }}
                       />
-                      <button 
+                      <button
                         className="absolute top-2 right-2"
                         onClick={(e) => {
                           e.preventDefault();

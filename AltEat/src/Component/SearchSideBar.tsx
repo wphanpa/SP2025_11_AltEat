@@ -13,7 +13,7 @@ function SearchSideBar({ filter }: SearchSideBarProps) {
   return (
     <>
       {/* Side Bar */}
-      <aside className="w-82 bg-[#F5F5F5] h-screen sticky shadow-[4px_0_4px_rgba(0,0,0,0.25)]">
+      <aside className="w-82 bg-[#F5F5F5] min-h-screen sticky shadow-[4px_0_4px_rgba(0,0,0,0.25)]">
         <div>
           {/* Filter Tag */}
           {filter.map((tag) => (
