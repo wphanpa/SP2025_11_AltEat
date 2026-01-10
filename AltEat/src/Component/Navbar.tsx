@@ -4,7 +4,7 @@ import user from "../assets/user.png";
 
 function Navbar() {
   return (
-    <nav>
+    <nav className="sticky top-0 z-50">
       <div className="h-20 bg-[#FFF3DB] flex justify-end pr-8">
         <div className="flex items-center text-[24px] gap-[70px]">
           <p className="cursor-pointer">About Us</p>
