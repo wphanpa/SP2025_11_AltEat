@@ -26,7 +26,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
               <img
                 src={recipe.image}
                 alt={recipe.title}
-                className="w-full h-[180px]"
+                className="w-full h-45"
               />
               {/* Favorite Button */}
               <button className="absolute top-2 right-2">

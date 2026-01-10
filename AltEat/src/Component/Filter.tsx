@@ -17,7 +17,7 @@ function Filter({ title, items }: FilterProps) {
               {items.map((item) => (
                 <p
                   key={item}
-                  className="p-2 bg-white rounded-3xl text-center text-[14px]"
+                  className="p-2 bg-white rounded-3xl text-center text-[14px] shadow-[0_2px_2px_rgba(0,0,0,0.25)]"
                 >
                   {item}
                 </p>

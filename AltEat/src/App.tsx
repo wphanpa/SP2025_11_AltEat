@@ -11,7 +11,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/test" element={<RecipeDetailPage />} />
+        <Route path="/recipe/:id" element={<RecipeDetailPage />} />
         <Route path="/favorite" element={<FavoritePage />} />
         <Route path="/recipesearch" element={<RecipeSearchPage />} />
         <Route path="/ingredientsearch" element={<IngredientSearchpage />} />
