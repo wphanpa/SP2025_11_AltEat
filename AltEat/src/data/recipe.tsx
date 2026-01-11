@@ -38,7 +38,7 @@ export const recommendedRecipes = [
     id: 6,
     title: "another1",
     image: "/mexican-shrimp-cocktail-with-avocado.jpg",
-    tags: ["0", "-1", "-2"],
+    tags: ["0", "-1"],
     isFavorite: true,
   },
 ];

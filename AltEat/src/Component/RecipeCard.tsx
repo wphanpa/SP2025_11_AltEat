@@ -14,19 +14,21 @@ interface RecipeCardProps {
 }
 
 function RecipeCard({ recipes }: RecipeCardProps) {
-    
   const navigate = useNavigate();
   return (
     <>
-      <div className="grid grid-cols-3 gap-12 w-full">
+      <div className="grid grid-cols-3 gap-12 w-full items-st">
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_2px_rgba(0,0,0,0.25)]">
+          <div
+            key={recipe.id}
+            className="bg-white rounded-2xl shadow-[0_3px_2px_rgba(0,0,0,0.25)]"
+          >
             {/* Recipe Image */}
             <div className="relative">
               <img
                 src={recipe.image}
                 alt={recipe.title}
-                className="w-full h-45"
+                className="w-full h-45 rounded-tl-2xl rounded-tr-2xl"
               />
               {/* Favorite Button */}
               <button className="absolute top-2 right-2">
@@ -46,7 +48,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
                 {recipe.title}
               </h3>
               {/* Tags */}
-              <div className="flex mt-3 gap-2">
+              <div className="flex flex-wrap mt-3 gap-2 justify-center">
                 {recipe.tags.map((tag) => (
                   <p
                     key={tag}

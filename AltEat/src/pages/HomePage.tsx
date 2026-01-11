@@ -43,7 +43,7 @@ function HomePage() {
           <Navbar />
 
           <div className=" w-[60%] flex flex-col m-auto max-w-7xl">
-            <div className="flex flex-col items-center mt-20 gap-8">
+            <div className="flex flex-col items-center my-18 gap-8">
               {/* Home Title */}
               <h1 className="text-[64px]">Welcome to AltEat</h1>
               <p className="text-[20px]">
@@ -68,20 +68,21 @@ function HomePage() {
             </div>
 
             {/* Other Tools */}
-            <div className="mt-[120px] flex flex-col items-center ">
+            <div className="flex flex-col items-center ">
               {/* Tools Title */}
               <h2 className="text-[32px] mb-14">Need something else?</h2>
               <div className="w-full flex flex-col">
                 {/* Options */}
                 <div className="grid grid-cols-3 gap-8">
                   {options.map((option) => (
+                    // Option Card
                     <div
                       key={option.tool}
                       className="bg-[#FFE6DD] rounded-2xl cursor-pointer flex flex-col"
                     >
                       {/* Options Header */}
-                      <div className="mx-3.75 mt-3.75 bg-white p-[12.5px] text-[20px] text-center outline-[1.5px] outline-[#AA8484] rounded-[15px]">
-                        <p>{option.tool}</p>
+                      <div className="mx-3.75 mt-3.75 text-center bg-white h-20 text-[20px] outline-[1.5px] outline-[#AA8484] rounded-[15px] flex justify-center items-center ">
+                        <p >{option.tool}</p>
                       </div>
                       {/* Options Image */}
                       <div className="flex items-center justify-center">
