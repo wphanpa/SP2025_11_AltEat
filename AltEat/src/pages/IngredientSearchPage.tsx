@@ -1,12 +1,34 @@
-import Navbar from "../component/Navbar";
-import SearchSideBar from "../component/SearchSideBar";
-import { ingredientFilter } from "../data/ingredientFilter";
-import IngredientCard from "../component/IngredientCard";
-import { ingredient } from "../data/ingredient";
-import search from "../assets/search.png";
-import context from "../assets/context.png";
+import type React from "react"
+
+import { useState, useEffect, useCallback } from "react"
+import Navbar from "../component/Navbar"
+import SearchSideBar from "../component/SearchSideBar"
+import { ingredientFilter } from "../data/ingredientFilter"
+import IngredientCard from "../component/IngredientCard"
+import { supabase } from "../lib/supabase"
+import type { IngredientDetail } from "../component/IngredientDetailPopup"
+import search from "../assets/search.png"
+import context from "../assets/context.png"
+
+interface Filters {
+  taste: string[]
+  texture: string[]
+  color: string[]
+  shape: string[]
+}
 
 function IngredientSearchpage() {
+  const [ingredients, setIngredients] = useState<IngredientDetail[]>([])
+  const [loading, setLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [filters, setFilters] = useState<Filters>({
+    taste: [],
+    texture: [],
+    color: [],
+    shape:[],
+  })
+  const [hasSearched, setHasSearched] = useState(false)
+
   const filterSection = [
     {
       title: "Taste",
@@ -20,7 +42,168 @@ function IngredientSearchpage() {
       title: "Color",
       items: ingredientFilter[0].color,
     },
-  ];
+    {
+      title: "Shape",
+      items: ingredientFilter[0].shape,
+    },
+  ]
+
+  // Check if any filters are selected
+  const hasActiveFilters = filters.taste.length > 0 || filters.texture.length > 0 || filters.color.length > 0 || filters.shape.length > 0
+
+  // Fetch ingredients from Supabase
+  const fetchIngredients = useCallback(async () => {
+    if (!hasActiveFilters && !searchQuery.trim()) {
+      setIngredients([])
+      return
+    }
+
+    setLoading(true)
+    setHasSearched(true)
+
+    try {
+      let query = supabase.from("ingredients").select("*")
+
+      // Apply filter conditions
+      if (filters.taste.length > 0) {
+        query = query.overlaps("has_flavor", filters.taste)
+      }
+      if (filters.texture.length > 0) {
+        query = query.overlaps("has_texture", filters.texture)
+      }
+      if (filters.color.length > 0) {
+        query = query.overlaps("has_color", filters.color)
+      }
+      if (filters.shape.length > 0) {
+        query = query.overlaps("has_shape", filters.shape)
+      }
+
+      const { data, error } = await query
+      console.log(query)
+      if (error) {
+        console.error("Error fetching ingredients:", error)
+        setIngredients([])
+        return
+      }
+
+      setIngredients(data || [])
+    } catch (err) {
+      console.error("Error:", err)
+      setIngredients([])
+    } finally {
+      setLoading(false)
+    }
+  }, [filters, hasActiveFilters, searchQuery])
+
+  // Fetch when filters change
+  useEffect(() => {
+    if (hasActiveFilters) {
+      fetchIngredients()
+    } else if (!searchQuery.trim()) {
+      setIngredients([])
+      setHasSearched(false)
+    }
+  }, [filters, hasActiveFilters])
+
+  // Handle filter changes from sidebar
+  const handleFilterChange = (filterType: string, selectedItems: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterType]: selectedItems,
+    }))
+  }
+
+  // Handle search submission
+  const handleSearch = async () => {
+    if (!searchQuery.trim() && !hasActiveFilters) {
+      return
+    }
+
+    setLoading(true)
+    setHasSearched(true)
+
+    try {
+      let query = supabase.from("ingredients").select("*")
+
+      // If there's a search query, search across multiple text fields
+      if (searchQuery.trim()) {
+        const searchTerm = searchQuery.trim().toLowerCase()
+
+        // Search in ingredient_name and type
+        query = query.or(`ingredient_name.ilike.%${searchTerm}%,type.ilike.%${searchTerm}%`)
+      }
+
+      // Also apply any active filters
+      if (filters.taste.length > 0) {
+        query = query.overlaps("has_flavor", filters.taste)
+      }
+      if (filters.texture.length > 0) {
+        query = query.overlaps("has_texture", filters.texture)
+      }
+      if (filters.color.length > 0) {
+        query = query.overlaps("has_color", filters.color)
+      }
+      if (filters.shape.length > 0) {
+        query = query.overlaps("has_shape", filters.shape)
+      }
+
+      const { data, error } = await query
+
+      if (error) {
+        console.error("Error searching ingredients:", error)
+        setIngredients([])
+        return
+      }
+
+      // Additional client-side filtering for array fields if search query exists
+      let filteredData = data || []
+      if (searchQuery.trim()) {
+        const searchLower = searchQuery.trim().toLowerCase()
+        filteredData = filteredData.filter((ingredient) => {
+          // Check name and type
+          if (ingredient.ingredient_name?.toLowerCase().includes(searchLower)) return true
+          if (ingredient.type?.toLowerCase().includes(searchLower)) return true
+
+          // Check array fields
+          const arrayFields = [
+            "has_flavor",
+            "has_texture",
+            "has_color",
+            "has_shape",
+            "has_other_names",
+            "can_cook",
+            "has_benefit",
+            "has_mineral",
+            "has_vitamin",
+            "has_nutrient",
+          ]
+
+          for (const field of arrayFields) {
+            const arr = ingredient[field as keyof typeof ingredient] as string[] | null
+            if (arr && arr.some((item) => item.toLowerCase().includes(searchLower))) {
+              return true
+            }
+          }
+          return false
+        })
+      }
+
+      setIngredients(filteredData)
+    } catch (err) {
+      console.error("Error:", err)
+      setIngredients([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Handle Enter key press
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch()
+    }
+  }
+
   return (
     <>
       <div className="min-h-screen bg-[#FFEDDD]">
@@ -29,7 +212,7 @@ function IngredientSearchpage() {
         </div>
 
         <div className="flex">
-          <SearchSideBar filter={filterSection} />
+          <SearchSideBar filter={filterSection} onFilterChange={handleFilterChange} />
           <div className="flex-1 flex justify-center">
             {/* Main Content */}
             <div className="flex flex-col items-center mb-20 max-w-7xl w-[85%]">
@@ -37,28 +220,48 @@ function IngredientSearchpage() {
                 {/* Title */}
                 <div>
                   <h1 className="text-5xl mb-4">Ingredient with Context</h1>
-                  <p className="text-[16px]">
-                    Discover ingredient combinations that make every meal
-                    delicious.
-                  </p>
+                  <p className="text-[16px]">Discover ingredient combinations that make every meal delicious.</p>
                 </div>
-                <img src={context} />
+                <img src={context || "/placeholder.svg"} />
               </div>
 
               {/* Text Input */}
               <div className="w-full relative">
-                <img src={search} className="absolute right-4 top-3" />
+                <img
+                  src={search || "/placeholder.svg"}
+                  className="absolute right-4 top-3 cursor-pointer"
+                  onClick={handleSearch}
+                />
                 <input
                   type="text"
-                  placeholder="Search recipes or ingredients…"
+                  placeholder="Search ingredients by context (e.g., 'black salty')..."
                   className="px-6 py-3 bg-white w-full rounded-[20px] outline-[1.5px] shadow-[0_8px_4px_rgba(0,0,0,0.25)]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleKeyPress}
                 />
               </div>
 
               {/* Card Item */}
               <div className="w-full">
                 <div className="flex flex-col items-start mt-14">
-                  <IngredientCard ingredients={ingredient} />
+                  {loading ? (
+                    <div className="w-full flex justify-center py-12">
+                      <div className="text-xl text-[#562C0C]">Loading ingredients...</div>
+                    </div>
+                  ) : !hasSearched ? (
+                    <div className="w-full flex flex-col items-center justify-center py-12 text-center">
+                      <div className="text-2xl text-[#562C0C] mb-2">Select filters or search to find ingredients</div>
+                      <p className="text-gray-500">Use the sidebar filters or search bar to discover ingredients</p>
+                    </div>
+                  ) : ingredients.length === 0 ? (
+                    <div className="w-full flex flex-col items-center justify-center py-12 text-center">
+                      <div className="text-2xl text-[#562C0C] mb-2">No ingredients found</div>
+                      <p className="text-gray-500">Try adjusting your filters or search terms</p>
+                    </div>
+                  ) : (
+                    <IngredientCard ingredients={ingredients} />
+                  )}
                 </div>
               </div>
             </div>
@@ -66,7 +269,7 @@ function IngredientSearchpage() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default IngredientSearchpage;
+export default IngredientSearchpage

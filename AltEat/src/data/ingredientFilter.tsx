@@ -1,7 +1,8 @@
 export const ingredientFilter = [
     {
-        taste: ["sweet", "sour", "salty", "bitter"],
-        texture: ["crispy", "crunchy", "chewy", "creamy", "tender", "juicy", "hard"],
-        color: ["red", "orange", "brown", "green", "blue", "yellow", "white"],
+        taste: ["Sweet", "Sour", "Salty", "Bitter"],
+        texture: ["Crispy", "Crunchy", "Chewy", "Creamy", "Tender", "Juicy", "Hard"],
+        color: ["Red", "Orange", "Brown", "Green", "Blue", "Yellow", "White"],
+        shape: ["Oval","Round","Irregular","Cubed","Oblong","Long","Small"]
     },
 ]

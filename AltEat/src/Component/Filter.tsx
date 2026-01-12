@@ -1,9 +1,24 @@
+
+import { useState } from "react"
+
 interface FilterProps {
-  title: string;
-  items: string[];
+  title: string
+  items: string[]
+  onFilterChange: (filterType: string, selectedItems: string[]) => void
 }
 
-function Filter({ title, items }: FilterProps) {
+function Filter({ title, items, onFilterChange }: FilterProps) {
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
+
+  const toggleItem = (item: string) => {
+    const newSelected = selectedItems.includes(item)
+      ? selectedItems.filter((i) => i !== item)
+      : [...selectedItems, item]
+
+    setSelectedItems(newSelected)
+    onFilterChange(title.toLowerCase(), newSelected)
+  }
+
   return (
     <>
       <div className="flex flex-col items-center">
@@ -17,7 +32,10 @@ function Filter({ title, items }: FilterProps) {
               {items.map((item) => (
                 <p
                   key={item}
-                  className="p-2 bg-white rounded-3xl text-center text-[14px] shadow-[0_2px_2px_rgba(0,0,0,0.25)]"
+                  onClick={() => toggleItem(item)}
+                  className={`p-2 rounded-3xl text-center text-[14px] shadow-[0_2px_2px_rgba(0,0,0,0.25)] cursor-pointer transition-colors ${
+                    selectedItems.includes(item) ? "bg-[#FFCB69] text-[#694900]" : "bg-white hover:bg-gray-100"
+                  }`}
                 >
                   {item}
                 </p>
@@ -27,7 +45,7 @@ function Filter({ title, items }: FilterProps) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default Filter;
+export default Filter

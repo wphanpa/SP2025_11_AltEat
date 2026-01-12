@@ -1,15 +1,16 @@
-import Filter from "./Filter";
+import Filter from "./Filter"
 
 interface FilterTag {
-  title: string;
-  items: string[];
+  title: string
+  items: string[]
 }
 
 interface SearchSideBarProps {
-  filter: FilterTag[];
+  filter: FilterTag[]
+  onFilterChange: (filterType: string, selectedItems: string[]) => void
 }
 
-function SearchSideBar({ filter }: SearchSideBarProps) {
+function SearchSideBar({ filter, onFilterChange }: SearchSideBarProps) {
   return (
     <>
       {/* Side Bar */}
@@ -17,12 +18,12 @@ function SearchSideBar({ filter }: SearchSideBarProps) {
         <div>
           {/* Filter Tag */}
           {filter.map((tag) => (
-            <Filter title={tag.title} items={tag.items} />
+            <Filter key={tag.title} title={tag.title} items={tag.items} onFilterChange={onFilterChange} />
           ))}
         </div>
       </aside>
     </>
-  );
+  )
 }
 
-export default SearchSideBar;
+export default SearchSideBar

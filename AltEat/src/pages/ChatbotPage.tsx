@@ -1,4 +1,4 @@
-import Navbar from "../Component/Navbar.tsx";
+import Navbar from "../component/Navbar.tsx";
 import { useState } from "react";
 
 function ChatbotPage() {
@@ -30,6 +30,7 @@ function ChatbotPage() {
                 backgroundImage: "url('/src/assets/chatbot-bg.png')",
             }}
         >
+            <Navbar></Navbar>
             <div className="flex min-h-screen">
 
             {/* Sidebar */}

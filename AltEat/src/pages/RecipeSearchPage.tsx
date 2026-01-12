@@ -28,7 +28,7 @@ function RecipeSearchPage() {
           <Navbar />
           <div className="flex">
             {/* Side Bar */}
-            <SearchSideBar filter={filterSection} />
+            <SearchSideBar filter={filterSection} onFilterChange={handleFilterChange}/>
 
             <div className="flex-1 flex justify-center">
               {/* Main Content */}
