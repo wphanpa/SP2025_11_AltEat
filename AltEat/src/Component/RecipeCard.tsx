@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 
-interface Recipe {
+export interface Recipe {
   id: number;
   title: string;
   image: string;
@@ -28,7 +28,11 @@ function RecipeCard({ recipes }: RecipeCardProps) {
               <img
                 src={recipe.image}
                 alt={recipe.title}
-                className="w-full h-45 rounded-tl-2xl rounded-tr-2xl"
+                className="w-full h-full rounded-tl-2xl rounded-tr-2xl"
+                onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/placeholder.svg";
+                  }}
               />
               {/* Favorite Button */}
               <button className="absolute top-2 right-2">
@@ -44,7 +48,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
 
             <div className="flex flex-col items-center mt-4">
               {/* Recipe Name */}
-              <h3 className="text-[#562C0C] font-medium text-2xl">
+              <h3 className="text-[#562C0C] text-center font-medium text-2xl">
                 {recipe.title}
               </h3>
               {/* Tags */}

@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import { useSupabaseFetch } from "../hooks/useSupabaseFetch";
 import { Link, useParams } from "react-router-dom";
 
-interface Recipe {
+export interface Recipe {
   idx: number;
   id: number;
   recipe_name: string;
