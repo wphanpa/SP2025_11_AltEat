@@ -6,6 +6,7 @@ import FavoritePage from "./pages/FavoritePage";
 import ChatbotPage from "./pages/ChatbotPage";
 import RecipeSearchPage from "./pages/RecipeSearchPage";
 import IngredientSearchpage from "./pages/IngredientSearchPage";
+import AboutUspage from "./pages/AboutUsPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/chatbot" element={<ChatbotPage />} />
         <Route path="/recipesearch" element={<RecipeSearchPage />} />
         <Route path="/ingredientsearch" element={<IngredientSearchpage />} />
+        <Route path="/aboutus" element={<AboutUspage />} />
       </Routes>
     </BrowserRouter>
   );
