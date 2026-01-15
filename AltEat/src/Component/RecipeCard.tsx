@@ -65,7 +65,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
               {/* More Button */}
               <button
                 onClick={() => navigate(`/recipe/${recipe.id}`)}
-                className="text-[#694900] text-[16px] px-6 py-1 bg-[#ECECEC] rounded-3xl my-4 cursor-pointer"
+                className="my-4 px-6 py-2 bg-[#562C0C] text-white rounded-full text-sm hover:bg-[#3d1f08] transition-colors cursor-pointer"
               >
                 More
               </button>

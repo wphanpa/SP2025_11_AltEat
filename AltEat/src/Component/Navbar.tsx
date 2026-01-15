@@ -31,7 +31,7 @@ function Navbar() {
             <Link to="/favorite">
               <img src={fav} className="h-8 cursor-pointer" />
             </Link>
-            <Link to="profile">
+            <Link to="/profile">
               <img src={user} className="h-10 cursor-pointer" />
             </Link>
             <div className="flex gap-2">

@@ -66,16 +66,16 @@ function IngredientSearchpage() {
 
       // Apply filter conditions
       if (filters.taste.length > 0) {
-        query = query.overlaps("has_flavor", filters.taste)
+        query = query.contains("has_flavor", filters.taste)
       }
       if (filters.texture.length > 0) {
-        query = query.overlaps("has_texture", filters.texture)
+        query = query.contains("has_texture", filters.texture)
       }
       if (filters.color.length > 0) {
-        query = query.overlaps("has_color", filters.color)
+        query = query.contains("has_color", filters.color)
       }
       if (filters.shape.length > 0) {
-        query = query.overlaps("has_shape", filters.shape)
+        query = query.contains("has_shape", filters.shape)
       }
 
       const { data, error } = await query
@@ -135,16 +135,16 @@ function IngredientSearchpage() {
 
       // Also apply any active filters
       if (filters.taste.length > 0) {
-        query = query.overlaps("has_flavor", filters.taste)
+        query = query.contains("has_flavor", filters.taste)
       }
       if (filters.texture.length > 0) {
-        query = query.overlaps("has_texture", filters.texture)
+        query = query.contains("has_texture", filters.texture)
       }
       if (filters.color.length > 0) {
-        query = query.overlaps("has_color", filters.color)
+        query = query.contains("has_color", filters.color)
       }
       if (filters.shape.length > 0) {
-        query = query.overlaps("has_shape", filters.shape)
+        query = query.contains("has_shape", filters.shape)
       }
 
       const { data, error } = await query

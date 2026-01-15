@@ -6,20 +6,24 @@ import context from "../assets/context.png";
 import subs from "../assets/subs.png";
 import RecipeCard from "../component/RecipeCard.tsx";
 import { recommendedRecipes } from "../data/recipe.tsx";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const options = [
     {
       tool: "Recipe Suggestion & Lookup",
       img: recipe,
+      url: "/recipesearch",
     },
     {
       tool: "Ingredient with Context",
       img: context,
+      url: "/ingredientsearch",
     },
     {
       tool: "Ingredient Substitution",
       img: subs,
+      url: "/chatbot",
     },
   ];
 
@@ -76,23 +80,25 @@ function HomePage() {
                 <div className="grid grid-cols-3 gap-8">
                   {options.map((option) => (
                     // Option Card
-                    <div
-                      key={option.tool}
-                      className="bg-[#FFE6DD] rounded-2xl cursor-pointer flex flex-col"
-                    >
-                      {/* Options Header */}
-                      <div className="mx-3.75 mt-3.75 text-center bg-white h-20 text-[20px] outline-[1.5px] outline-[#AA8484] rounded-[15px] flex justify-center items-center ">
-                        <p >{option.tool}</p>
+                    <Link to={option.url}>
+                      <div
+                        key={option.tool}
+                        className="bg-[#FFE6DD] rounded-2xl cursor-pointer flex flex-col"
+                      >
+                        {/* Options Header */}
+                        <div className="mx-3.75 mt-3.75 text-center bg-white h-20 text-[20px] outline-[1.5px] outline-[#AA8484] rounded-[15px] flex justify-center items-center ">
+                          <p>{option.tool}</p>
+                        </div>
+                        {/* Options Image */}
+                        <div className="flex items-center justify-center">
+                          <img
+                            src={option.img}
+                            alt={option.tool}
+                            className="max-h-full max-w-full"
+                          />
+                        </div>
                       </div>
-                      {/* Options Image */}
-                      <div className="flex items-center justify-center">
-                        <img
-                          src={option.img}
-                          alt={option.tool}
-                          className="max-h-full max-w-full"
-                        />
-                      </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>

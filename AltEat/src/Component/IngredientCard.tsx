@@ -52,7 +52,7 @@ function IngredientCard({ ingredients }: IngredientCardProps) {
               {/* Type */}
               <span className="text-gray-500 text-sm mt-1">{ingredient.type}</span>
               {/* Tags */}
-              <div className="flex flex-wrap mt-3 gap-2 mb-4 justify-center">
+              <div className="flex flex-wrap mt-3 gap-2 justify-center">
                 {getTags(ingredient).map((tag, index) => (
                   <p
                     key={`${tag}-${index}`}
@@ -65,7 +65,7 @@ function IngredientCard({ ingredients }: IngredientCardProps) {
               {/* More Detail Button */}
               <button
                 onClick={() => handleMoreDetail(ingredient)}
-                className="mb-4 px-6 py-2 bg-[#562C0C] text-white rounded-full text-sm hover:bg-[#3d1f08] transition-colors"
+                className="my-4 px-6 py-2 bg-[#562C0C] text-white rounded-full text-sm hover:bg-[#3d1f08] transition-colors cursor-pointer"
               >
                 More Detail
               </button>

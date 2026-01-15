@@ -7,10 +7,12 @@ import ChatbotPage from "./pages/ChatbotPage";
 import RecipeSearchPage from "./pages/RecipeSearchPage";
 import IngredientSearchpage from "./pages/IngredientSearchPage";
 import AboutUspage from "./pages/AboutUsPage";
+import ScrollToTop from "./component/ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/recipe/:id" element={<RecipeDetailPage />} />
