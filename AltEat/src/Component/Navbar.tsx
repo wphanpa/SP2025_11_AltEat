@@ -1,9 +1,39 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+
 import fav from "../assets/fav.png";
 import user from "../assets/user.png";
-import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 function Navbar() {
+    const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setIsLoggedIn(!!data.session);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setIsLoggedIn(!!session);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleUserClick = () => {
+    if (isLoggedIn) {
+      navigate("/profile");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <nav className="sticky top-0 z-50">
       <div className="h-16 bg-[#FFF3DB] flex justify-between px-8">
@@ -31,9 +61,9 @@ function Navbar() {
             <Link to="/favorite">
               <img src={fav} className="h-8 cursor-pointer" />
             </Link>
-            <Link to="/profile">
+            <button onClick={handleUserClick}>
               <img src={user} className="h-10 cursor-pointer" />
-            </Link>
+            </button>
             <div className="flex gap-2">
               <p className="cursor-pointer">TH</p>
               <p>/</p>

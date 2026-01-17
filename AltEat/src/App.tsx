@@ -8,6 +8,10 @@ import RecipeSearchPage from "./pages/RecipeSearchPage";
 import IngredientSearchpage from "./pages/IngredientSearchPage";
 import AboutUspage from "./pages/AboutUsPage";
 import ScrollToTop from "./component/ScrollToTop";
+import SignUpPage from "./pages/SignUpPage";
+import SignupSuccess from "./pages/SignUpSuccessPage";
+import Profile from "./pages/ProfilePage";
+import Login from "./pages/LoginPage";
 
 function App() {
   return (
@@ -21,6 +25,10 @@ function App() {
         <Route path="/recipesearch" element={<RecipeSearchPage />} />
         <Route path="/ingredientsearch" element={<IngredientSearchpage />} />
         <Route path="/aboutus" element={<AboutUspage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signupsuccess" element={<SignupSuccess />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
