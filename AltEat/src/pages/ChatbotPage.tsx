@@ -447,7 +447,7 @@ function ChatbotPage() {
                 <div key={msg.id} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.role === "bot" && (
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-[#FFCB69] rounded-full flex items-center justify-center text-sm">
+                      <div className="w-8 h-8 bg-[#FBB496] rounded-full flex items-center justify-center text-sm text-[#562C0C]">
                         B
                       </div>
                     </div>
@@ -473,7 +473,7 @@ function ChatbotPage() {
 
                   {msg.role === "user" && (
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm">
+                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm">
                         U
                       </div>
                     </div>
