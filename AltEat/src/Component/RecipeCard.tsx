@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { addFavorite, removeFavorite, getFavoriteIds } from "../lib/favorite";
 
 export interface Recipe {
   id: number;
   title: string;
   image: string;
   tags: string[];
-  isFavorite: boolean;
 }
 
 interface RecipeCardProps {
@@ -15,9 +16,44 @@ interface RecipeCardProps {
 
 function RecipeCard({ recipes }: RecipeCardProps) {
   const navigate = useNavigate();
+  const [favoriteRecipe, setFavoriteRecipe] = useState<number[]>([]);
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const ids = await getFavoriteIds(); // from favorite table
+        setFavoriteRecipe(ids);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadFavorites();
+  }, []);
+
+  const toggleFavorite = async (recipe: { id: number; title: string }) => {
+    const isFav = favoriteRecipe.includes(recipe.id);
+
+    try {
+      if (isFav) {
+        await removeFavorite(recipe.id);
+        setFavoriteRecipe((prev) => prev.filter((id) => id !== recipe.id));
+        console.log(`Remove ${recipe.title} from Favorite`);
+      } else {
+        await addFavorite(recipe.id);
+        setFavoriteRecipe((prev) => [...prev, recipe.id]);
+        console.log(`Add ${recipe.title} to Favorite`);
+      }
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+    }
+  };
+
+  const isFavorite = (id: number) => favoriteRecipe.includes(id);
+
   return (
     <>
-      <div className="grid grid-cols-3 gap-12 w-full items-st">
+      <div className="grid grid-cols-3 gap-12 w-full items-start">
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
@@ -30,15 +66,18 @@ function RecipeCard({ recipes }: RecipeCardProps) {
                 alt={recipe.title}
                 className="w-full h-full rounded-tl-2xl rounded-tr-2xl"
                 onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/placeholder.svg";
-                  }}
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/placeholder.svg";
+                }}
               />
               {/* Favorite Button */}
-              <button className="absolute top-2 right-2">
+              <button
+                className="absolute top-2 right-2 cursor-pointer"
+                onClick={() => toggleFavorite(recipe)}
+              >
                 <Heart
-                  className={`w-8 h-8 ${
-                    recipe.isFavorite
+                  className={`w-8 h-8 transition-transform hover:scale-110 ${
+                    isFavorite(recipe.id)
                       ? "fill-red-500 text-red-500"
                       : "text-gray-400 fill-white"
                   }`}
