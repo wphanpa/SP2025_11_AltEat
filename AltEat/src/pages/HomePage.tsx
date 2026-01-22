@@ -5,8 +5,9 @@ import recipe from "../assets/recipe.png";
 import context from "../assets/context.png";
 import subs from "../assets/subs.png";
 import RecipeCard from "../component/RecipeCard.tsx";
-import { recommendedRecipes } from "../data/recipe.tsx";
 import { Link } from "react-router-dom";
+import { supabase } from "../lib/supabase.tsx";
+import { useState, useEffect } from "react";
 
 function HomePage() {
   const options = [
@@ -26,6 +27,43 @@ function HomePage() {
       url: "/chatbot",
     },
   ];
+
+  const [recommendedRecipes, setRecommendedRecipes] = useState<any[]>([]);
+  const [loadingRecipes, setLoadingRecipes] = useState(true);
+
+  useEffect(() => {
+    const fetchRandomRecipes = async () => {
+      setLoadingRecipes(true);
+
+      const { data, error } = await supabase
+        .from("recipe_staging")
+        .select("*")
+        .limit(30);
+
+      if (error || !data) {
+        console.error("Failed to fetch recipes:", error);
+        setLoadingRecipes(false);
+        return;
+      }
+
+      const shuffled = [...data].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 6);
+
+      const normalized = selected.map((r) => ({
+        id: r.id,
+        title: r.recipe_name,
+        image: r.img_src || "/placeholder.svg",
+        tags: r.cuisine_path
+          ? r.cuisine_path.split("/").filter(Boolean).slice(0, 3)
+          : [],
+      }));
+
+      setRecommendedRecipes(normalized);
+      setLoadingRecipes(false);
+    };
+
+    fetchRandomRecipes();
+  }, []);
 
   return (
     <>
@@ -110,7 +148,11 @@ function HomePage() {
             {/* Recipe */}
             <div className="flex flex-col items-start">
               <h2 className="text-3xl mb-12">Recommend Recipes</h2>
-              <RecipeCard recipes={recommendedRecipes} />
+              {loadingRecipes ? (
+                <p className="text-center text-gray-600">Loading recipes...</p>
+              ) : (
+                <RecipeCard recipes={recommendedRecipes} />
+              )}
             </div>
             {/* Divider */}
             <hr className="border-[#EDAE9B] border-t-4 mt-20 mb-20" />

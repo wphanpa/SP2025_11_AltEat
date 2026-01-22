@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { addFavorite, removeFavorite, getFavoriteIds } from "../lib/favorite";
+import FavoriteButton from "./FavoriteButton";
 
 export interface Recipe {
   id: number;
@@ -71,18 +71,13 @@ function RecipeCard({ recipes }: RecipeCardProps) {
                 }}
               />
               {/* Favorite Button */}
-              <button
-                className="absolute top-2 right-2 cursor-pointer"
-                onClick={() => toggleFavorite(recipe)}
-              >
-                <Heart
-                  className={`w-8 h-8 transition-transform hover:scale-110 ${
-                    isFavorite(recipe.id)
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-400 fill-white"
-                  }`}
+              <div className="absolute top-2 right-2">
+                <FavoriteButton
+                  recipeId={recipe.id}
+                  isFavorite={isFavorite(recipe.id)}
+                  onToggle={() => toggleFavorite(recipe)}
                 />
-              </button>
+              </div>
             </div>
 
             <div className="flex flex-col items-center mt-4">

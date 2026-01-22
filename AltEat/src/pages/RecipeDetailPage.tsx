@@ -1,8 +1,10 @@
 import Navbar from "../component/Navbar";
 import { useRecommendedRecipes } from "../hooks/useRecommendedRecipes";
-import { Heart } from "lucide-react";
 import { useSupabaseFetch } from "../hooks/useSupabaseFetch";
 import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { addFavorite, removeFavorite, getFavoriteIds } from "../lib/favorite";
+import FavoriteButton from "../component/FavoriteButton";
 
 export interface Recipe {
   idx: number;
@@ -55,6 +57,41 @@ export default function RecipeDetailPage() {
       .filter((tag: string) => tag.trim())
       .slice(0, 3);
   };
+
+  const [favoriteRecipe, setFavoriteRecipe] = useState<number[]>([]);
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const ids = await getFavoriteIds(); // from favorite table
+        setFavoriteRecipe(ids);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadFavorites();
+  }, []);
+
+  const toggleFavorite = async (recipe: { id: number; title: string }) => {
+    const isFav = favoriteRecipe.includes(recipe.id);
+
+    try {
+      if (isFav) {
+        await removeFavorite(recipe.id);
+        setFavoriteRecipe((prev) => prev.filter((id) => id !== recipe.id));
+        console.log(`Remove ${recipe.title} from Favorite`);
+      } else {
+        await addFavorite(recipe.id);
+        setFavoriteRecipe((prev) => [...prev, recipe.id]);
+        console.log(`Add ${recipe.title} to Favorite`);
+      }
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+    }
+  };
+
+  const isFavorite = (id: number) => favoriteRecipe.includes(id);
 
   if (loading) {
     return (
@@ -244,15 +281,19 @@ export default function RecipeDetailPage() {
                           target.src = "/placeholder.svg";
                         }}
                       />
-                      <button
-                        className="absolute top-2 right-2"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // TODO: Implement favorite functionality
-                        }}
-                      >
-                        <Heart className="w-6 h-6 text-gray-400 fill-white hover:fill-red-500 hover:text-red-500 transition-colors" />
-                      </button>
+                      <div className="absolute top-2 right-2 z-10">
+                        <FavoriteButton
+                          recipeId={recipeItem.id}
+                          isFavorite={isFavorite(recipeItem.id)}
+                          onToggle={() =>
+                            toggleFavorite({
+                              id: recipeItem.id,
+                              title: recipeItem.recipe_name,
+                            })
+                          }
+                          size={6}
+                        />
+                      </div>
                     </div>
                     <div className="py-3">
                       <h3 className="font-semibold text-[#040404] text-center mb-2 line-clamp-2">
