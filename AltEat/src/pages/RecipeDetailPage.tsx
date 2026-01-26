@@ -134,9 +134,16 @@ export default function RecipeDetailPage() {
       <div className="flex relative">
         <main className="flex-1 p-8 max-w-3xl mx-auto overflow-y-auto">
           {/* Title */}
-          <h1 className="font-(family-name:Alexandria) text-4xl font-bold text-center text-[#040404] mb-4">
-            {recipe.recipe_name}
-          </h1>
+          <div className="flex gap-x-5 justify-center items-center">
+            <h1 className="font-(family-name:Alexandria) text-4xl font-bold text-center text-[#040404]">
+              {recipe.recipe_name}
+            </h1>
+            <FavoriteButton
+              recipeId={recipe.id}
+              isFavorite={isFavorite(recipe.id)}
+              onToggle={() => toggleFavorite({ id: recipe.id, title: recipe.recipe_name })}
+            />
+          </div>
 
           {/* Tags */}
           {tags.length > 0 && (
