@@ -81,43 +81,25 @@ function RecipeSearchPage() {
         .select("*", { count: "exact" })
 
       // Apply search query
-      const allConditions: string[] = []
-
-      // Apply search query
       if (searchQuery.trim()) {
         const searchTerm = searchQuery.trim()
-        allConditions.push(
-          `recipe_name.ilike.%${searchTerm}%`,
-          `ingredients.ilike.%${searchTerm}%`,
-          `cuisine_path.ilike.%${searchTerm}%`
-        )
+        query = query.or(`recipe_name.ilike.%${searchTerm}%,ingredients.ilike.%${searchTerm}%,cuisine_path.ilike.%${searchTerm}%`)
       }
 
       // Apply cuisine filter
       if (filters.cuisine.length > 0) {
-        filters.cuisine.forEach(c => {
-          allConditions.push(`cuisine_path.ilike.%${c}%`)
-        })
+        const cuisineConditions = filters.cuisine
+          .map((c) => `cuisine_path.ilike.%${c}%`)
+          .join(",")
+        query = query.or(cuisineConditions)
       }
 
       // Apply ingredient filter
       if (filters.ingredient.length > 0) {
-        filters.ingredient.forEach(i => {
-          allConditions.push(`ingredients.ilike.%${i}%`)
-        })
-      }
-
-      // Apply method filter
-      if (filters.method.length > 0) {
-        filters.method.forEach(m => {
-          allConditions.push(`directions.ilike.%${m}%`)
-          allConditions.push(`recipe_name.ilike.%${m}%`)
-        })
-      }
-
-      // Apply all conditions as a single OR query
-      if (allConditions.length > 0) {
-        query = query.or(allConditions.join(","))
+        const ingredientConditions = filters.ingredient
+          .map((i) => `ingredients.ilike.%${i}%`)
+          .join(",")
+        query = query.or(ingredientConditions)
       }
 
       // Apply method filter
@@ -126,13 +108,13 @@ function RecipeSearchPage() {
           .map((m) => `directions.ilike.%${m}%,recipe_name.ilike.%${m}%`)
           .join(",")
         query = query.or(methodConditions)
-        console.log(methodConditions)
       }
 
       // Pagination
       const from = pageNum * PAGE_SIZE
       const to = from + PAGE_SIZE - 1
 
+      console.log("Query:", query)
       const { data, error, count } = await query.range(from, to)
 
       if (error) {
@@ -170,9 +152,12 @@ function RecipeSearchPage() {
 
   // Handle filter changes from sidebar
   const handleFilterChange = (filterType: string, selectedItems: string[]) => {
+    let key = filterType.toLowerCase()
+    if (key === "cooking method") key = "method"
+
     setFilters((prev) => ({
       ...prev,
-      [filterType]: selectedItems,
+      [key]: selectedItems,
     }))
   }
 
