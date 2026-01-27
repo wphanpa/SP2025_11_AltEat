@@ -21,7 +21,7 @@ class SuggestionRequest(BaseModel):
     ingredients: list[str]
 
 class LookupRequest(BaseModel):
-    recipe_name: str
+    recipe: str
 
 class ContextRequest(BaseModel):
     taste: str

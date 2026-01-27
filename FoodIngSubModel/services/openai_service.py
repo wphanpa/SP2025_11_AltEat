@@ -283,7 +283,7 @@ class OpenAIService:
         match = re.match(r"Ingredients:\s*(.+?)\s*\|\s*Cooking Method:\s*(.+)$", 
                        response_text.strip(), flags=re.IGNORECASE | re.DOTALL)
         if match:
-            return {
+            return {    
                 "ingredients": match.group(1).strip(),
                 "cooking_method": match.group(2).strip()
             }
