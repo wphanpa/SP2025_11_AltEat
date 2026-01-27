@@ -16,6 +16,18 @@ export default function SignUp() {
     setLoading(true);
     setError(null);
 
+    const { data } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("username", username)
+      .maybeSingle();
+
+    if (data) {
+      setError("Username already taken");
+      return;
+    }
+
+
     const { error } = await supabase.auth.signUp({
       email,
       password,

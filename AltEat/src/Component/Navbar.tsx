@@ -1,30 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { Heart, User, MessageCircle } from "lucide-react";
+import { useProfile } from "../context/ProfileContext";
 
-import fav from "../assets/fav.png";
-import user from "../assets/user.png";
 import logo from "../assets/logo.png";
 
+interface UserProfile {
+  avatarUrl: string | null;
+  username: string | null;
+}
+
 function Navbar() {
-    const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setIsLoggedIn(!!data.session);
-    });
+  const { profile } = useProfile();
+  const isLoggedIn = !!profile;
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setIsLoggedIn(!!session);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
 
   const handleUserClick = () => {
     if (isLoggedIn) {
@@ -39,31 +31,52 @@ function Navbar() {
       <div className="h-16 bg-[#FFF3DB] flex justify-between px-8">
         <div className="max-w-40 flex items-center">
           <Link to="/" className="cursor-pointer">
-          <img src={logo} />
-        </Link>
+            <img src={logo} alt="Logo" />
+          </Link>
         </div>
+        
         <div className="flex items-center text-[20px] gap-10">
-          <Link to="/aboutus" className="cursor-pointer">
+          <Link to="/aboutus" className="cursor-pointer hover:text-[#ce441a] transition-colors duration-200">
             About Us
           </Link>
-          <Link to="/recipesearch" className="cursor-pointer">
+          <Link to="/recipesearch" className="cursor-pointer hover:text-[#ce441a] transition-colors duration-200">
             Recipes
           </Link>
-          <Link to="/ingredientsearch" className="cursor-pointer">
+          <Link to="/ingredientsearch" className="cursor-pointer hover:text-[#ce441a] transition-colors duration-200">
             Ingredients
           </Link>
+
           <div className="flex gap-5 items-center">
             <Link to="/chatbot">
-              <button className="bg-[#FBB496] h-11 w-33 rounded-[10px] cursor-pointer">
-                Chatbot
+              <button className="bg-[#FBB496] hover:bg-[#f99970] h-11 px-5 rounded-[10px] cursor-pointer flex items-center justify-center gap-2 transition-all duration-200">
+                <span>Chatbot</span>
               </button>
             </Link>
+
             <Link to="/favorite">
-              <img src={fav} className="h-8 cursor-pointer" />
+              <Heart className="h-8 w-8 text-[#ce441a] fill-current cursor-pointer hover:scale-110 hover:brightness-110 transition-transform duration-200" />
             </Link>
-            <button onClick={handleUserClick}>
-              <img src={user} className="h-10 cursor-pointer" />
+
+            {/* User Profile - No Hover Effect */}
+            <button
+              type="button"
+              onClick={handleUserClick}
+              className="cursor-pointer"
+            >
+              {isLoggedIn && profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url || "/placeholder.svg"}
+                  alt="Profile"
+                  className="h-9 w-9 lg:h-10 lg:w-10 rounded-full object-cover border-2 border-[#e48f75]"
+                />
+              ) : (
+                <div className="h-9 w-9 lg:h-10 lg:w-10 rounded-full bg-[#FBB496] flex items-center justify-center">
+                  <User className="h-5 w-5 lg:h-6 lg:w-6 text-[#ce441a]" />
+                </div>
+              )}
             </button>
+
+            {/* Language Switcher - No Hover Effect */}
             <div className="flex gap-2">
               <p className="cursor-pointer">TH</p>
               <p>/</p>
