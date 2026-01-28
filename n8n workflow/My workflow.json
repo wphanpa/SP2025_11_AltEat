@@ -1,5 +1,5 @@
 {
-  "name": "AI Evaluation Workflow",
+  "name": "My workflow",
   "nodes": [
     {
       "parameters": {
@@ -749,21 +749,6 @@
       "typeVersion": 1,
       "id": "e5126d7a-4a71-4600-acfb-8450fedd7f19",
       "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "## Credential (Expand to view)\nOpenAI:\nAPI key = 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\n\nSupabase:\nHost = https://yrpoikxovgaplilgwfys.supabase.co\nService role secret = sb_secret_86oznJQnPy03OPvPqfcFeA_n8XLqobH\n",
-        "height": 80,
-        "width": 352
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -2032,
-        416
-      ],
-      "typeVersion": 1,
-      "id": "111e5f8b-31db-40d8-a4ee-d632686d6574",
-      "name": "Sticky Note1"
     }
   ],
   "pinData": {},
@@ -1131,7 +1116,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "95e83255-3d0b-43bb-b2f3-af062f8b216a",
+  "versionId": "6ddaa75e-c4e4-49e8-9d47-4c58d94541b3",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "27e90aa2c3dadb26f34294f4f0bd3729ad99c4f6809f0dc73523cd13e284ce3d"
