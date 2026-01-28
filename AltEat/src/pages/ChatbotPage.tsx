@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams  } from "react-router-dom"
 import { supabase } from "../lib/supabase"
 import ChatFeedback from "../component/ChatFeedback"
 import type { User } from "@supabase/supabase-js"
@@ -22,6 +22,7 @@ const N8N_WEBHOOK_URL = "http://localhost:5678/webhook/f5e289b6-4914-4c86-ade9-b
 
 function ChatbotPage() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [user, setUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [sessions, setSessions] = useState<ChatSession[]>([])
@@ -35,6 +36,7 @@ function ChatbotPage() {
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState("")
   const [deleteConfirmationId, setDeleteConfirmationId] = useState<string | null>(null)
+  const [initialMessageSent, setInitialMessageSent] = useState(false)
 
   const generateId = () => Date.now().toString() + Math.random().toString(36).substr(2, 9)
 
@@ -113,7 +115,13 @@ function ChatbotPage() {
         setUser(session.user)
         setAuthLoading(false)
       } else {
-        navigate("/login")
+        // Preserve the message parameter when redirecting to login
+        const message = searchParams.get("message")
+        if (message) {
+          navigate(`/login?redirect=/chatbot&message=${encodeURIComponent(message)}`, { state: { warning: "You need to log in to access the chatbot." } })
+        } else {
+          navigate("/login?redirect=/chatbot", { state: { warning: "You need to log in to access the chatbot." } })
+        }
       }
     }
 
@@ -125,19 +133,35 @@ function ChatbotPage() {
         setUser(session.user)
         setAuthLoading(false)
       } else {
-        navigate("/login")
+        const message = searchParams.get("message")
+        if (message) {
+          navigate(`/login?redirect=/chatbot&message=${encodeURIComponent(message)}`, { state: { warning: "You need to log in to access the chatbot." } })
+        } else {
+          navigate("/login?redirect=/chatbot", { state: { warning: "You need to log in to access the chatbot." } })
+        }
       }
     })
 
     return () => subscription.unsubscribe()
-  }, [navigate])
+  }, [navigate, searchParams])
 
   // Load sessions when user is authenticated
   useEffect(() => {
-    if (user) {
-      loadSessions()
+    if (user && !authLoading && !initialMessageSent) {
+      const initialMessage = searchParams.get("message")
+      if (initialMessage) {
+        // Set the message and trigger send
+        setInput(initialMessage)
+        setInitialMessageSent(true)
+        // Remove the message parameter from URL
+        searchParams.delete("message")
+        setSearchParams(searchParams)
+        handleSend(initialMessage)
+      } else {
+        loadSessions()
+      }
     }
-  }, [user])
+  }, [user, authLoading, initialMessageSent, searchParams])
 
   const loadSessions = async () => {
     if (!user) return
@@ -200,10 +224,11 @@ function ChatbotPage() {
     })
   }
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading || !user) return
+  const handleSend = async (messageOverride?: string) => {
+    const text = typeof messageOverride === "string" ? messageOverride : input
+    if (!text.trim() || isLoading || !user) return
 
-    const userMessage = input.trim()
+    const userMessage = text.trim()
     const userMessageId = generateId()
     setInput("")
     setIsLoading(true)
@@ -518,7 +543,7 @@ function ChatbotPage() {
                   disabled={isLoading}
                 />
                 <button
-                  onClick={handleSend}
+                  onClick={() => handleSend()}
                   disabled={!input.trim() || isLoading}
                   className="ml-2 w-8 h-8 bg-[#FFCB69] rounded-full flex items-center justify-center hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
                 >

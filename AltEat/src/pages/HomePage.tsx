@@ -5,11 +5,12 @@ import recipe from "../assets/recipe.png";
 import context from "../assets/context.png";
 import subs from "../assets/subs.png";
 import RecipeCard from "../component/RecipeCard.tsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase.tsx";
 import { useState, useEffect } from "react";
 
 function HomePage() {
+  const navigate = useNavigate();
   const options = [
     {
       tool: "Recipe Suggestion & Lookup",
@@ -30,6 +31,7 @@ function HomePage() {
 
   const [recommendedRecipes, setRecommendedRecipes] = useState<any[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(true);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const fetchRandomRecipes = async () => {
@@ -65,6 +67,22 @@ function HomePage() {
     fetchRandomRecipes();
   }, []);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+
+    // Check if user is authenticated
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session?.user) {
+      // User is logged in, redirect to chatbot with message
+      navigate(`/chatbot?message=${encodeURIComponent(query.trim())}`);
+    } else {
+      // User is not logged in, redirect to login with return URL and message
+      navigate(`/login?redirect=/chatbot&message=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
     <>
       {/* Background */}
@@ -92,10 +110,12 @@ function HomePage() {
                 Get started by choosing what you’d like to do today.
               </p>
               {/* Text Input */}
-              <form className="flex flex-col items-center gap-1">
+              <form onSubmit={handleSubmit} className="flex flex-col items-center gap-1">
                 <input
                   type="text"
                   name="query"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   placeholder="How can I help you?"
                   className="px-8 py-5 h-[50px] w-[820px] bg-white rounded-[20px] text-[16px] outline-[1.5px] shadow-[0_8px_4px_rgba(0,0,0,0.25)]"
                 />{" "}
