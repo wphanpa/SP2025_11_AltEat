@@ -1,0 +1,1126 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1456,
+        384
+      ],
+      "id": "065c6810-dc4d-494c-8757-31236214b2a5",
+      "name": "When chat message received",
+      "webhookId": "f5e289b6-4914-4c86-ade9-b5a99970a807",
+      "executeOnce": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        1024
+      ],
+      "id": "27c03fe5-504c-4fb1-ac09-284374f27ee7",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1120,
+        608
+      ],
+      "id": "ec146c3b-08b0-460d-a4f9-cdf637352171",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "QKvg7lsxUt80J0Ai",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "substitute",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c8a30a86-a54c-42a5-950b-d911dbe1f050"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "289ffc8a-6528-43e0-8ef7-f8b9bafd6595",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "suggest",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e0246dc0-bac0-4d86-8848-62896daf6c31",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "lookup",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cdedd7a3-858b-4cfc-815d-2153c0e3dc80",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "context",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "903f7429-fb1b-4967-ad21-02fd0ffd8548",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "other",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -224,
+        320
+      ],
+      "id": "62d81714-476a-4f44-ae75-52a6c0d3aa0e",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the AI response\nconst aiResponse = $('Classify AI Agent1').first().json.output;\nconst aiR = $(\"Classify AI Agent1\").all();\nconsole.log(aiR)\ntry {\n  // Parse the JSON response\n  const parsedResponse = JSON.parse(aiResponse);\n  \n  // Validate structure\n  const result = {\n    classification: parsedResponse.classification || \"other\",\n    entities: {\n      ingredient: parsedResponse.entities?.ingredient || null,\n      recipe: parsedResponse.entities?.recipe || null,\n      ingredients: parsedResponse.entities?.ingredients || null,\n      attributes: {\n        taste: parsedResponse.entities?.attributes?.taste || null,\n        texture: parsedResponse.entities?.attributes?.texture || null,\n        color: parsedResponse.entities?.attributes?.color || null,\n        method: parsedResponse.entities?.attributes?.method || null\n      }\n    },\n    confidence: parsedResponse.confidence || 0.0\n  };\n  \n  return { json: result };\n  \n} catch (error) {\n  // Fallback if JSON parsing fails\n  return { \n    json: {\n      classification: \"other\",\n      entities: {\n        ingredient: null,\n        recipe: null,\n        ingredients: null,\n        attributes: {\n          taste: null,\n          texture: null,\n          color: null,\n          method: null\n        }\n      },\n      confidence: 0.0,\n      error: \"Failed to parse AI response\"\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        384
+      ],
+      "id": "162694c1-c854-4674-a6c7-a42ea0005fed",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -992,
+        608
+      ],
+      "id": "a57f02d3-e8b4-42c3-b70c-9f3c1c61cd45",
+      "name": "Simple Memory3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"success\": true,\n  \"type\": \"recipe_suggestions\",\n  \"recipes\": {{ $json.recipes }}\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        176
+      ],
+      "id": "80814ba5-578f-4986-9def-88849115c9da",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"success\": true,\n  \"type\": \"ingredient_substitutes\",\n  \"substitutes\": {{ $json.substitutes }}\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        -16
+      ],
+      "id": "b0268d1c-d50f-44a4-992a-2ec246a93529",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        1024
+      ],
+      "id": "07275676-372e-43ed-bda0-47fc395d511c",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "QKvg7lsxUt80J0Ai",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://0.0.0.0:8080/substitute",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=ingredient",
+              "value": "={{ $json.entities.ingredient }}"
+            },
+            {
+              "name": "recipe",
+              "value": "={{ $json.entities.recipe }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        64,
+        -16
+      ],
+      "id": "b7fe82ab-aa38-4997-9794-85c6ed184ac5",
+      "name": "Substitution1"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "work with supabase",
+        "tableName": {
+          "__rl": true,
+          "value": "chat_sessions",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -864,
+        608
+      ],
+      "id": "cbcb77fc-280a-41cb-ba77-c28aab4d348f",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "hklvoniHqFzoOu6G",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        816
+      ],
+      "id": "a8839b78-bc7e-495f-bc2e-eb65fdbe328f",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "QKvg7lsxUt80J0Ai",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://0.0.0.0:8080/lookup",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "recipe",
+              "value": "={{ $json.entities.recipe }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        64,
+        368
+      ],
+      "id": "e64b00a6-cd87-4f79-8322-a0c2be96c1a5",
+      "name": "Recipe Lookup1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://0.0.0.0:8080/context",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "taste",
+              "value": "={{ $json.entities.attributes.taste || \"\"}}"
+            },
+            {
+              "name": "texture",
+              "value": "={{ $json.entities.attributes.texture || \"\" }}"
+            },
+            {
+              "name": "color",
+              "value": "={{ $json.entities.attributes.color || \"\" }}"
+            },
+            {
+              "name": "cooking_method",
+              "value": "={{ $json.entities.attributes.method || \"\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        64,
+        560
+      ],
+      "id": "0e70b226-08f0-4dd8-9907-44cf44092550",
+      "name": "Context Ingredients1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://0.0.0.0:8080/suggest",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=ingredients",
+              "value": "={{ $json.entities.ingredients }}"
+            },
+            {
+              "name": "session_id",
+              "value": "={{ $('When chat message received').item.json.sessionId }}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $('When chat message received').item.json.messageId }}"
+            },
+            {
+              "name": "user_message",
+              "value": "={{ $('When chat message received').item.json.chatInput }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        64,
+        176
+      ],
+      "id": "bf356c28-c917-417a-91cb-2915e63f39c4",
+      "name": "Recipe Suggestion1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"success\": true,\n  \"type\": \"recipe_lookup\",\n  \"cooking_method\": \"{{ $json.cooking_method }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        368
+      ],
+      "id": "cabb6198-eb89-4a69-b2f7-c810ee162e30",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"success\": true,\n  \"type\": \"context_ingredient\",\n  \"recipes\": {{ JSON.stringify($json.attributes) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        560
+      ],
+      "id": "15f50023-8e1d-4e66-a879-e6d1f73fddae",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1024,
+        240
+      ],
+      "id": "d7b01080-b263-40af-bcf7-31aa72f5ad54",
+      "name": "Context  Respond1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are a recipe chatbot AI agent that performs both intent classification and entity extraction in a single response.\n\nTASK: Analyze user messages and return structured JSON with classification and extracted entities.\n\nCLASSIFICATION CATEGORIES:\n1. \"substitute\" - User wants to substitute/replace an ingredient in a recipe\n2. \"suggest\" - User wants recipe suggestions based on available ingredients\n3. \"other\" - Message doesn't fit cooking/recipe context\n4. \"lookup\" - User wants recipe details, including ingredients and cooking method.\n5. \"context\" - User wants to know what the ingredient is by describing the ingredient's attributes\n\nENTITY EXTRACTION RULES:\nAlways return the full JSON structure as defined in RESPONSE FORMAT. For fields that are not applicable to the classification, set their value to null.\n\n- For \"substitute\": Extract \"ingredient\" and \"recipe\". Set \"ingredients\" to null. All keys in \"attributes\" should be null.\n- For \"suggest\": Extract \"ingredients\". Set \"ingredient\" and \"recipe\" to null. All keys in \"attributes\" should be null.\n- For \"lookup\": Extract \"recipe\". Set \"ingredient\" and \"ingredients\" to null. All keys in \"attributes\" should be null.\n- For \"context\": Extract values for \"attributes\". Set \"ingredient\", \"recipe\", and \"ingredients\" to null. Any non-specified attributes should be null.\n- For \"other\": Set \"ingredient\", \"recipe\", and \"ingredients\" to null. All keys in \"attributes\" should be null.\n\nRESPONSE FORMAT (MUST be valid JSON):\n{\n  \"classification\": \"substitute|suggest|other|lookup|context\",\n  \"entities\": {\n    \"ingredient\": \"string or null\",\n    \"recipe\": \"string or null\", \n    \"ingredients\": [\"array\", \"of\", \"strings\"] or null,\n    \"attributes\": {\n       \"taste\": \"string or null\",\n       \"texture\": \"string or null\",\n       \"color\": \"string or null\",\n       \"method\": \"string or null\"\n    }\n  },\n  \"confidence\": 0.0-1.0\n}\n\nCLASSIFICATION GUIDELINES:\n\nSUBSTITUTE indicators:\n- Keywords: \"substitute\", \"replace\", \"instead of\", \"alternative\", \"swap\", \"use instead\"\n- Patterns: \"X instead of Y\", \"replace X with\", \"substitute X in Y\"\n- Context: mentions specific ingredient + specific recipe/dish\n\nSUGGEST indicators:\n- Keywords: \"recipe\", \"make\", \"cook\", \"prepare\", \"what can I make\", \"suggestions\"\n- Patterns: \"I have X, Y, Z\", \"using these ingredients\", \"with chicken and rice\"\n- Context: lists available ingredients, asks for recipe ideas\n\nOTHER indicators:\n- Greetings, general questions, non-food related queries\n- Unclear or incomplete requests\n- Questions about cooking techniques without specific ingredients\n\nLOOKUP indicators:\n- Keywords: \"recipe for\", \"how to make\", \"ingredients of\", \"details of\"\n- Patterns: \"recipe for X\", \"how do I cook X\", \"I want to know more about X\", \"details for X\"\n- Context: mentions a recipe, asks for recipe details (ingredients and cooking method)\n\nCONTEXT indicators:\n- Keywords: \"kind of\", \"type of\", \"what is this ingredient\", \"don’t know the name\", \"it tastes\", \"it looks like\", \"it feels\", \"used for cooking\", \"something that\"\n- Patterns: \"a [color] [food form]\" (e.g., a green leafy vegetable), \"something that tastes [taste]\" (e.g., something that tastes sour), \"a [texture] ingredient\" (e.g., a crunchy seed), \"an ingredient used for [cooking method]\" (e.g., used for baking cakes)\n- Context: user describes an ingredient by its attributes (taste, texture, color, cooking method), user does not know or provide the actual name of the ingredient, the request is essentially about identifying or clarifying an ingredient from descriptive clues\n\nENTITY EXTRACTION GUIDELINES:\n\nIngredient extraction:\n- Extract base ingredient names (e.g., \"eggs\" not \"2 eggs\")\n- Use singular or plural as mentioned by user\n- Common ingredients: eggs, butter, milk, flour, sugar, oil, etc.\n\nRecipe extraction:\n- Extract dish/recipe name (e.g., \"chocolate cake\", \"cookies\", \"pasta\")\n- Include cooking method if mentioned (e.g., \"baked chicken\", \"fried rice\")\n- Use general terms if specific recipe unclear (e.g., \"baking\", \"cooking\")\n\nIngredients list extraction:\n- Extract all mentioned food items as separate array elements\n- Clean up quantities and focus on ingredient names\n- Include proteins, vegetables, grains, dairy, etc.\n\nAttributes list extraction:\n- Extract descriptive attributes of an ingredient when the user does not provide its name\n- Capture details such as, taste (e.g., sour, sweet, salty, bitter, spicy), texture (e.g., crunchy, soft, chewy, creamy), color (e.g., red, green, yellow, brown), and cooking method (e.g., fried, grilled, baked)\n\nCONFIDENCE SCORING:\n- 0.9-1.0: Very clear intent with specific ingredients/recipes mentioned\n- 0.7-0.8: Clear intent but some ambiguity in entities\n- 0.5-0.6: Somewhat unclear intent or entities\n- 0.3-0.4: Ambiguous message, best guess classification\n- 0.0-0.2: Very unclear or nonsensical input\n\nEXAMPLES:\n\nInput: \"I need to substitute eggs in my chocolate cake recipe\"\nOutput: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"eggs\", \"recipe\": \"chocolate cake\", \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"Can I replace butter with oil in cookies?\"\nOutput: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"butter\", \"recipe\": \"cookies\", \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"I have chicken, rice, and broccoli. What can I make?\"\nOutput: {\"classification\": \"suggest\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": [\"chicken\", \"rice\", \"broccoli\"], \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"What recipes can I make with tomatoes and pasta?\"\nOutput: {\"classification\": \"suggest\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": [\"tomatoes\", \"pasta\"], \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"Hello, how are you today?\"\nOutput: {\"classification\": \"other\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.8}\n\nInput: \"What's the weather like?\"\nOutput: {\"classification\": \"other\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"substitute something in cake\"\nOutput: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"unknown ingredient\", \"recipe\": \"cake\", \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.4}\n\nInput: \"how do I make spaghetti?\"\nOutput: {\"classification\": \"lookup\", \"entities\": {\"ingredient\": null, \"recipe\": \"spaghetti\", \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"details for apple pie\"\nOutput: {\"classification\": \"lookup\", \"entities\": {\"ingredient\": null, \"recipe\": \"apple pie\", \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.8}\n\nInput: \"I'm looking for a yellow fruit that tastes sour\"\nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": null, \"attributes\": {\"taste\": \"sour\", \"texture\": null, \"color\": \"yellow\", \"method\": null}}, \"confidence\": 0.8}\n\nInput: \"i want a green vegetable that is crunchy and slightly bitter\"\nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": null, \"attributes\": {\"taste\": \"bitter\", \"texture\": \"crunchy\", \"color\": \"green\", \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"i want something that is tender and usually grilled\"\nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"recipe\": null, \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": \"tender\", \"color\": \"method\": \"grilled\"}}, \"confidence\": 0.85}\n\nIMPORTANT:\n- Always respond with valid JSON only\n- Never include explanations outside the JSON\n- Return JSON in a single line without newlines or extra formatting\n- If unsure about entities, use descriptive placeholders\n- Maintain consistent confidence scoring\n- Handle typos and informal language gracefully\n\nFORMAT REQUIREMENT: Return JSON like this:\n{\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"eggs\", \"recipe\": \"pancake\", \"ingredients\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}",
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1056,
+        384
+      ],
+      "id": "5c4d7e55-82a4-421a-b447-57ed196885c1",
+      "name": "Classify AI Agent1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        864
+      ],
+      "id": "3912d238-42fc-4907-a6a3-991afc697e69",
+      "name": "Conversational AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        352,
+        864
+      ],
+      "id": "f015f488-36d7-4278-bcda-3a45224c5864",
+      "name": "Respond1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={\n  \"chatInput\": {{ $('When chat message received').item.json.chatInput }}\n  \"modelOutput\": {{ $json.toJsonString() }}\n}\n",
+        "options": {
+          "systemMessage": "You are the final response generator for the AltEat chatbot.\n\nYOUR TASK:\nYou will receive:\n1. The user's original message (chatInput)\n2. The processed result from the food substitution / recipe model (modelOutput)\n\nYour job is to convert modelOutput into a friendly, helpful, human-like response that matches the user's language.\n\nLANGUAGE RULE:\n- Always respond in the SAME language as the user.\n- If user writes in Thai → respond in Thai.\n- If user writes in English → respond in English.\n- If user mixes languages, follow the dominant language.\n\nRESPONSE RULES:\n- Do NOT output JSON.\n- Do NOT repeat internal fields like “success”, “type”, or raw JSON keys.\n- Convert the result into a natural conversation style.\n- Be concise, polite, and helpful—like ChatGPT.\n- Use clean formatting:\n  - Numbered list for substitutes or recipes\n  - Short helpful explanation\n\nINTERPRETING THE MODEL RESULT:\nIf modelOutput.type == \"ingredient_substitutes\":\n  - Explain substitutes clearly and naturally.\n  - Example (TH): “ถ้าไม่มีกะไก่ คุณสามารถใช้วัตถุดิบเหล่านี้แทนได้…”\n  - Do NOT add ingredients that are not in the model output.\n\nIf modelOutput.type == \"recipe_suggestions\":\n  - Present recipe suggestions clearly.\n  - Include name + ingredient list (if provided).\n\nIf modelOutput contains no usable data:\n  - Give a polite fallback: “ขออภัย ฉันไม่พบข้อมูลค่ะ ลองอธิบายเพิ่มเติมได้ไหม?”\n\nTONE:\n- Friendly, helpful, natural.\n- Do NOT speak like a system.\n- Do NOT mention you are an AI agent.\n\nFINAL OUTPUT:\n- Only return the final user-visible message.\n- No JSON. No metadata."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        240
+      ],
+      "id": "25016e29-3c91-457c-8a4e-4c6f41fbfc09",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        432
+      ],
+      "id": "f007189c-6953-4dd1-8804-f4796e3af812",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "QKvg7lsxUt80J0Ai",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        432
+      ],
+      "id": "999a92c2-b9d6-491b-9356-a7271eca6131",
+      "name": "Simple Memory4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        384
+      ],
+      "id": "2b555100-749d-42cc-bbf7-0c46c0a790f6",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "source": "googleSheets",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1DNIhRnJB2Dzh_KhopVUcis2knz4uDLkFLN39yA2lcuA/edit?usp=sharing",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DNIhRnJB2Dzh_KhopVUcis2knz4uDLkFLN39yA2lcuA/edit#gid=0"
+        }
+      },
+      "type": "n8n-nodes-base.evaluationTrigger",
+      "typeVersion": 4.7,
+      "position": [
+        -1616,
+        224
+      ],
+      "id": "f94722ea-e35d-4369-817f-6e10eaed5698",
+      "name": "When fetching a dataset row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aIQmWP8LNG1zI3dN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"sessionId\": \"aea8011044a44be2a003337a9d639d2f\",\n  \"action\": \"sendMessage\",\n  \"chatInput\": \"{{ $json.body }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1456,
+        224
+      ],
+      "id": "38f73fdb-04dc-4aec-9e2b-d84952f82ef3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "checkIfEvaluating"
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -496,
+        384
+      ],
+      "id": "739b6a02-0242-4b50-ac72-4f8b2b82c268",
+      "name": "Evaluation"
+    },
+    {
+      "parameters": {
+        "source": "googleSheets",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1DNIhRnJB2Dzh_KhopVUcis2knz4uDLkFLN39yA2lcuA/edit?usp=sharing",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DNIhRnJB2Dzh_KhopVUcis2knz4uDLkFLN39yA2lcuA/edit#gid=0"
+        },
+        "outputs": {
+          "values": [
+            {
+              "outputName": "actual_category",
+              "outputValue": "={{ $('Evaluation').item.json.classification }}"
+            },
+            {
+              "outputName": "actual_entity",
+              "outputValue": "={{ $('Evaluation').item.json.entities.toJsonString() }}"
+            },
+            {
+              "outputName": "score_category",
+              "outputValue": "={{ $('Category').item.json.Categorization }}"
+            },
+            {
+              "outputName": "score_entity",
+              "outputValue": "={{ $json['String similarity'] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        80,
+        -176
+      ],
+      "id": "3a483da0-0bc9-4b96-bbf7-2302ca9214fc",
+      "name": "Set Outputs",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aIQmWP8LNG1zI3dN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "metric": "categorization",
+        "expectedAnswer": "={{ $('When fetching a dataset row').item.json.expected_category }}",
+        "actualAnswer": "={{ $json.classification }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -256,
+        -176
+      ],
+      "id": "78962dbb-5877-444e-9323-a96ca10272d7",
+      "name": "Category"
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "metric": "stringSimilarity",
+        "expectedAnswer": "={{ $('When fetching a dataset row').item.json.expected_entity }}",
+        "actualAnswer": "={{ $('Evaluation').item.json.entities.toJsonString() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -80,
+        -176
+      ],
+      "id": "4750766c-8875-423f-9d13-967505b89106",
+      "name": "Entity"
+    },
+    {
+      "parameters": {
+        "content": "## Evaluation\nCredential to Connect with: your Google account (https://youtu.be/FBGtpWMTppw?si=jjstLVpNSfePyeoP)\nDocument Containing Dataset (Google Sheets): https://docs.google.com/spreadsheets/d/1DNIhRnJB2Dzh_KhopVUcis2knz4uDLkFLN39yA2lcuA/edit?usp=sharing\n",
+        "height": 192,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2032,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "e5126d7a-4a71-4600-acfb-8450fedd7f19",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "Conversational AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classify AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Substitution1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Recipe Suggestion1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Recipe Lookup1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Context Ingredients1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Conversational AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Evaluation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory3": {
+      "ai_memory": [
+        [
+          {
+            "node": "Classify AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Conversational AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Substitution1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Classify AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recipe Lookup1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context Ingredients1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recipe Suggestion1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversational AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Respond1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Context  Respond1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory4": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond1": {
+      "main": [
+        []
+      ]
+    },
+    "Context  Respond1": {
+      "main": [
+        []
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "Classify AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When fetching a dataset row": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation": {
+      "main": [
+        [
+          {
+            "node": "Category",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Outputs": {
+      "main": [
+        []
+      ]
+    },
+    "Category": {
+      "main": [
+        [
+          {
+            "node": "Entity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entity": {
+      "main": [
+        [
+          {
+            "node": "Set Outputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6ddaa75e-c4e4-49e8-9d47-4c58d94541b3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "27e90aa2c3dadb26f34294f4f0bd3729ad99c4f6809f0dc73523cd13e284ce3d"
+  },
+  "id": "pDuLOeCzmErsnOtV",
+  "tags": []
+}
