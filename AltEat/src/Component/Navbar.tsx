@@ -1,22 +1,16 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
-import { Heart, User, MessageCircle } from "lucide-react";
+import { Heart, User } from "lucide-react";
 import { useProfile } from "../context/ProfileContext";
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 import logo from "../assets/logo.png";
 
-interface UserProfile {
-  avatarUrl: string | null;
-  username: string | null;
-}
-
 function Navbar() {
   const navigate = useNavigate();
-
+  const { t } = useTranslation('navbar');
   const { profile } = useProfile();
   const isLoggedIn = !!profile;
-
 
   const handleUserClick = () => {
     if (isLoggedIn) {
@@ -37,19 +31,19 @@ function Navbar() {
         
         <div className="flex items-center text-[20px] gap-10">
           <Link to="/aboutus" className="cursor-pointer hover:text-[#ce441a] transition-colors duration-200">
-            About Us
+            {t('aboutUs')}
           </Link>
           <Link to="/recipesearch" className="cursor-pointer hover:text-[#ce441a] transition-colors duration-200">
-            Recipes
+            {t('recipes')}
           </Link>
           <Link to="/ingredientsearch" className="cursor-pointer hover:text-[#ce441a] transition-colors duration-200">
-            Ingredients
+            {t('ingredients')}
           </Link>
 
           <div className="flex gap-5 items-center">
             <Link to="/chatbot">
               <button className="bg-[#FBB496] hover:bg-[#f99970] h-11 px-5 rounded-[10px] cursor-pointer flex items-center justify-center gap-2 transition-all duration-200">
-                <span>Chatbot</span>
+                <span>{t('chatbot')}</span>
               </button>
             </Link>
 
@@ -57,7 +51,6 @@ function Navbar() {
               <Heart className="h-8 w-8 text-[#ce441a] fill-current cursor-pointer hover:scale-110 hover:brightness-110 transition-transform duration-200" />
             </Link>
 
-            {/* User Profile - No Hover Effect */}
             <button
               type="button"
               onClick={handleUserClick}
@@ -76,12 +69,7 @@ function Navbar() {
               )}
             </button>
 
-            {/* Language Switcher - No Hover Effect */}
-            <div className="flex gap-2">
-              <p className="cursor-pointer">TH</p>
-              <p>/</p>
-              <p className="cursor-pointer">EN</p>
-            </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>

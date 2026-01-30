@@ -5,6 +5,7 @@ import ChatFeedback from "../component/ChatFeedback"
 import type { User } from "@supabase/supabase-js"
 import Navbar from "../component/Navbar"
 import { MoreVertical, Edit2, Trash2, X, Check } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface ChatMessage {
   id: string
@@ -21,6 +22,7 @@ interface ChatSession {
 const N8N_WEBHOOK_URL = "http://localhost:5678/webhook/f5e289b6-4914-4c86-ade9-b5a99970a807/chat"
 
 function ChatbotPage() {
+  const { t } = useTranslation("chatbot")
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const [user, setUser] = useState<User | null>(null)
@@ -299,7 +301,7 @@ function ChatbotPage() {
       const errorMsg: ChatMessage = {
         id: errorMessageId,
         role: "bot",
-        text: "Sorry, there was an error processing your request. Please try again.",
+        text: t("error.processing"),
       }
       setMessages((prev) => [...prev, errorMsg])
       await saveMessage(sessionId, errorMessageId, "bot", errorMsg.text)
@@ -328,7 +330,7 @@ function ChatbotPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-[#FFCB69] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">{t("loading")}</p>
         </div>
       </div>
     )
@@ -349,7 +351,7 @@ function ChatbotPage() {
         >
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-3">
-            {isSidebarOpen && <span className="text-sm font-semibold">History</span>}
+            {isSidebarOpen && <span className="text-sm font-semibold">{t("history")}</span>}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-[#FFCB69] transition"
@@ -364,7 +366,7 @@ function ChatbotPage() {
                 onClick={handleNewChat}
                 className="w-full py-2 px-3 bg-[#FFCB69] rounded-md text-sm font-medium hover:bg-[#e6b85e] transition"
               >
-                 New Chat
+                 {t("newChat")}
               </button>
             </div>
           )}
@@ -417,13 +419,13 @@ function ChatbotPage() {
                               onClick={(e) => handleRenameClick(e, session)}
                               className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 flex items-center gap-2 text-gray-700"
                             >
-                              <Edit2 size={12} /> Rename
+                              <Edit2 size={12} /> {t("actions.rename")}
                             </button>
                             <button
                               onClick={(e) => handleDeleteClick(e, session.session_id)}
                               className="w-full text-left px-3 py-2 text-xs hover:bg-red-50 text-red-600 flex items-center gap-2"
                             >
-                              <Trash2 size={12} /> Delete
+                              <Trash2 size={12} /> {t("actions.delete")}
                             </button>
                           </div>
                         )}
@@ -432,7 +434,7 @@ function ChatbotPage() {
                   )}
                  </li>
               ))}
-              {sessions.length === 0 && <li className="text-gray-400 text-center py-4">No chat history yet</li>}
+              {sessions.length === 0 && <li className="text-gray-400 text-center py-4">{t("noHistory")}</li>}
             </ul>
           )}
         </aside>
@@ -443,17 +445,17 @@ function ChatbotPage() {
             {/* Welcome Card - show only when no messages */}
             {messages.length === 0 && (
               <div className="bg-gray-50 rounded-2xl p-5 mb-6">
-                <h1 className="font-semibold text-lg mb-1">Hi there! Looking for a food substitute?</h1>
+                <h1 className="font-semibold text-lg mb-1">{t("greeting.title")}</h1>
                 <p className="text-sm text-gray-600 mb-4">
-                  Just tell me what ingredient you have or don't have, and I'll suggest tasty alternatives.
+                  {t("greeting.subtitle")}
                 </p>
 
                 <div className="flex flex-wrap gap-2">
                   {[
-                    "Substitute for milk",
-                    "What can replace soy sauce?",
-                    "Replace egg in baking",
-                    "What can I use instead of sugar?",
+                    t("greeting.suggestions.milk"),
+                    t("greeting.suggestions.soySauce"),
+                    t("greeting.suggestions.egg"),
+                    t("greeting.suggestions.sugar"),
                   ].map((text, i) => (
                     <button
                       key={i}
@@ -538,7 +540,7 @@ function ChatbotPage() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="How can I help you?"
+                  placeholder={t("input.placeholder")}
                   className="flex-1 outline-none text-sm"
                   disabled={isLoading}
                 />
@@ -558,22 +560,22 @@ function ChatbotPage() {
       {deleteConfirmationId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl transform transition-all">
-            <h3 className="text-lg font-semibold mb-2">Delete Chat Session?</h3>
+            <h3 className="text-lg font-semibold mb-2">{t("delete.title")}</h3>
             <p className="text-gray-600 text-sm mb-6">
-              Are you sure you want to delete this chat session? This action cannot be undone.
+              {t("delete.message")}
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirmationId(null)}
                 className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                Cancel
+                {t("delete.cancel")}
               </button>
               <button
                 onClick={handleDeleteConfirm}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
               >
-                Delete
+                {t("delete.confirm")}
               </button>
             </div>
           </div>

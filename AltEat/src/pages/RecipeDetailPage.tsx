@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { addFavorite, removeFavorite, getFavoriteIds } from "../lib/favorite";
 import FavoriteButton from "../component/FavoriteButton";
+import { useTranslation } from 'react-i18next';
 
 export interface Recipe {
   idx: number;
@@ -27,6 +28,8 @@ export interface Recipe {
 
 export default function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation('recipe');
+  const {t: t2} = useTranslation('common');
 
   const {
     data: recipe,
@@ -98,7 +101,7 @@ export default function RecipeDetailPage() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-gray-200 border-t-[#F5C55A] rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-xl text-gray-600">Loading recipe...</p>
+          <p className="text-xl text-gray-600">{t('search.loadingRecipe')}</p>
         </div>
       </div>
     );
@@ -108,7 +111,7 @@ export default function RecipeDetailPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl text-red-600 mb-4">Error loading recipe</p>
+          <p className="text-xl text-red-600 mb-4">{t('detail.errorLoading')}</p>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -118,7 +121,7 @@ export default function RecipeDetailPage() {
   if (!recipe) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-xl text-gray-600">Recipe not found</p>
+        <p className="text-xl text-gray-600">{t('recipeNotFound')}</p>
       </div>
     );
   }
@@ -167,25 +170,25 @@ export default function RecipeDetailPage() {
             <div className="flex gap-6 mb-8 justify-center flex-wrap text-sm">
               {recipe.prep_time && (
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-black">Prep Time:</span>
+                  <span className="font-semibold text-black">{t('detail.prepTime')}</span>
                   <span>{recipe.prep_time}</span>
                 </div>
               )}
               {recipe.cook_time && (
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-black">Cook Time:</span>
+                  <span className="font-semibold text-black">{t('detail.cookTime')}</span>
                   <span>{recipe.cook_time}</span>
                 </div>
               )}
               {recipe.total_time && (
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-black">Total Time:</span>
+                  <span className="font-semibold text-black">{t('detail.totalTime')}</span>
                   <span>{recipe.total_time}</span>
                 </div>
               )}
               {recipe.servings && (
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-black">Servings:</span>
+                  <span className="font-semibold text-black">{t('detail.servings')}</span>
                   <span>{recipe.servings}</span>
                 </div>
               )}
@@ -210,7 +213,7 @@ export default function RecipeDetailPage() {
 
             <div className="flex-1 border-3 border-black rounded-lg p-6 bg-[#FFE8B1]">
               <h2 className="text-xl font-bold text-black text-center mb-4">
-                Ingredients
+                {t('detail.ingredients')}
               </h2>
               <ul className="space-y-2">
                 {ingredients.map((ingredient, index) => (
@@ -226,7 +229,7 @@ export default function RecipeDetailPage() {
           {steps.length > 0 && (
             <div className="mb-10">
               <h2 className="text-2xl font-bold text-black mb-6">
-                How to Make {recipe.recipe_name}
+                {t('detail.howToMake')} {recipe.recipe_name}
               </h2>
               <ol className="space-y-4">
                 {steps.map((step, index) => (
@@ -247,7 +250,7 @@ export default function RecipeDetailPage() {
           {recipe.nutrition && (
             <div className="bg-[#FFE6DD] border-2 border-gray-400 rounded-lg p-6 mb-6">
               <h2 className="text-xl font-bold text-black mb-4">
-                Nutrition Information
+                {t('detail.nutritionInfo')}
               </h2>
               <div className="text-sm text-black">
                 <p>{recipe.nutrition}</p>
@@ -259,13 +262,13 @@ export default function RecipeDetailPage() {
         {/* Right Sidebar - Recommended Recipes */}
         <aside className="w-80 p-6 border-l border-gray-200 sticky top-0 h-screen overflow-y-auto flex-shrink-0 bg-[#F5F5F5]">
           <h2 className="text-xl font-semibold text-black mb-6">
-            Recommended recipes
+            {t('detail.recommended')}
           </h2>
 
           {recommendedLoading ? (
             <div className="text-center py-8">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-[#F5C55A] rounded-full animate-spin mx-auto"></div>
-              <p className="text-sm text-gray-500 mt-2">Loading...</p>
+              <p className="text-sm text-gray-500 mt-2">{t2('loading')}</p>
             </div>
           ) : recommendedRecipes.length > 0 ? (
             <div className="space-y-6">

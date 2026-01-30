@@ -1,0 +1,10 @@
+{
+  "title": "Favorite",
+  "noFavorites": "You don't have any favorite recipes yet.",
+  "loadingFavorites": "Loading favorites...",
+  "loginRequired": "This feature is available to registered users only. Please",
+  "login": "log in",
+  "or": "or",
+  "signup": "sign up",
+  "first": "first."
+}

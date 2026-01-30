@@ -1,15 +1,15 @@
 import type React from "react"
 
 import { useState, useEffect, useCallback } from "react"
-import Navbar from "../component/Navbar";
-import SearchSideBar from "../component/SearchSideBar";
-import { recipeFilter } from "../data/recipeFilter";
-import recipe_img from "../assets/recipe.png";
-import search from "../assets/search.png";
-import RecipeCard from "../component/RecipeCard";
+import Navbar from "../component/Navbar"
+import SearchSideBar from "../component/SearchSideBar"
+import { recipeFilter } from "../data/recipeFilter"
+import recipe_img from "../assets/recipe.png"
+import search from "../assets/search.png"
+import RecipeCard from "../component/RecipeCard"
 import type { Recipe } from "../component/RecipeCard"
 import { supabase } from "../lib/supabase"
-
+import { useTranslation } from 'react-i18next'
 
 interface Filters {
   ingredient: string[]
@@ -18,6 +18,7 @@ interface Filters {
 }
 
 function RecipeSearchPage() {
+  const { t } = useTranslation(['recipe', 'common'])
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -46,18 +47,18 @@ function RecipeSearchPage() {
     }))
   }
 
-
+  // Keep filter items as strings
   const filterSection = [
     {
-      title: "Ingredient",
+      title: t('recipe:filters.ingredient'),
       items: recipeFilter[0].ingredient,
     },
     {
-      title: "Cooking Method",
+      title: t('recipe:filters.method'),
       items: recipeFilter[0].method,
     },
     {
-      title: "Cuisine",
+      title: t('recipe:filters.cuisine'),
       items: recipeFilter[0].cuisine,
     },
   ]
@@ -152,8 +153,18 @@ function RecipeSearchPage() {
 
   // Handle filter changes from sidebar
   const handleFilterChange = (filterType: string, selectedItems: string[]) => {
+    console.log("Filter changed:", filterType, selectedItems); // Debug log
+    
     let key = filterType.toLowerCase()
-    if (key === "cooking method") key = "method"
+    
+    // Map the translated filter titles back to the filter keys
+    if (key === t('recipe:filters.ingredient').toLowerCase()) {
+      key = "ingredient"
+    } else if (key === t('recipe:filters.method').toLowerCase() || key === "cooking method") {
+      key = "method"
+    } else if (key === t('recipe:filters.cuisine').toLowerCase()) {
+      key = "cuisine"
+    }
 
     setFilters((prev) => ({
       ...prev,
@@ -189,9 +200,9 @@ function RecipeSearchPage() {
                 <div className="flex items-center mb-5">
                   {/* Title */}
                   <div>
-                    <h1 className="text-5xl mb-4">Recipe Suggestion and Look Up</h1>
+                    <h1 className="text-5xl mb-4">{t('recipe:search.title')}</h1>
                     <p className="text-[16px]">
-                      Not sure what to cook? Get recipe ideas based on the ingredients you have!
+                      {t('recipe:search.subtitle')}
                     </p>
                   </div>
                   <img src={recipe_img} alt="Recipe" />
@@ -207,7 +218,7 @@ function RecipeSearchPage() {
                   />
                   <input
                     type="text"
-                    placeholder="Search recipes or ingredients..."
+                    placeholder={t('recipe:search.searchPlaceholder')}
                     className="px-6 py-3 bg-white w-full rounded-[20px] outline-[1.5px] shadow-[0_8px_4px_rgba(0,0,0,0.25)]"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -219,23 +230,23 @@ function RecipeSearchPage() {
                 <div className="w-full">
                   <h3 className="my-7 text-2xl">
                     {hasSearched
-                      ? `You can make ${recipes.length} recipe${recipes.length !== 1 ? 's' : ''}`
+                      ? t('recipe:search.youCanMake', { count: recipes.length })
                       : ""}
                   </h3>
                   <div className="flex flex-col items-start">
                     {loading && page === 0 ? (
                       <div className="w-full flex justify-center py-12">
-                        <div className="text-xl text-[#562C0C]">Loading recipes...</div>
+                        <div className="text-xl text-[#562C0C]">{t('recipe:search.loadingRecipes')}</div>
                       </div>
                     ) : !hasSearched ? (
                       <div className="w-full flex flex-col items-center justify-center py-12 text-center">
-                        <div className="text-2xl text-[#562C0C] mb-2">Select filters or search to find recipes</div>
-                        <p className="text-gray-500">Use the sidebar filters or search bar to discover recipes</p>
+                        <div className="text-2xl text-[#562C0C] mb-2">{t('recipe:search.selectFilters')}</div>
+                        <p className="text-gray-500">{t('recipe:search.useFilters')}</p>
                       </div>
                     ) : recipes.length === 0 ? (
                       <div className="w-full flex flex-col items-center justify-center py-12 text-center">
-                        <div className="text-2xl text-[#562C0C] mb-2">No recipes found</div>
-                        <p className="text-gray-500">Try adjusting your filters or search terms</p>
+                        <div className="text-2xl text-[#562C0C] mb-2">{t('recipe:search.noRecipesFound')}</div>
+                        <p className="text-gray-500">{t('recipe:search.adjustFilters')}</p>
                       </div>
                     ) : (
                       <RecipeCard recipes={normalizeRecipes(recipes)} />
@@ -249,13 +260,13 @@ function RecipeSearchPage() {
                     onClick={() => setPage((p) => p + 1)}
                     className="mt-4 px-6 py-2 bg-[#562C0C] text-white rounded-full hover:bg-[#6d3810] transition-colors"
                   >
-                    View More
+                    {t('common:viewMore')}
                   </button>
                 )}
 
                 {/* Loading more indicator */}
                 {loading && page > 0 && (
-                  <div className="mt-4 text-[#562C0C]">Loading more...</div>
+                  <div className="mt-4 text-[#562C0C]">{t('recipe:search.loadingMore')}</div>
                 )}
 
               </div>

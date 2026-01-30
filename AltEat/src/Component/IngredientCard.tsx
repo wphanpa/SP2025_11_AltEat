@@ -1,5 +1,6 @@
 import { useState } from "react"
 import IngredientDetailPopup, { type IngredientDetail } from "./IngredientDetailPopup"
+import { useTranslation } from 'react-i18next'
 
 interface IngredientCardProps {
   ingredients: IngredientDetail[]
@@ -9,6 +10,7 @@ function IngredientCard({ ingredients }: IngredientCardProps) {
   const [selectedIngredient, setSelectedIngredient] = useState<IngredientDetail | null>(null)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const { t } = useTranslation('ingredient')
 
   const handleMoreDetail = (ingredient: IngredientDetail) => {
     setSelectedIngredient(ingredient)
@@ -67,7 +69,7 @@ function IngredientCard({ ingredients }: IngredientCardProps) {
                 onClick={() => handleMoreDetail(ingredient)}
                 className="my-4 px-6 py-2 bg-[#562C0C] text-white rounded-full text-sm hover:bg-[#3d1f08] transition-colors cursor-pointer"
               >
-                More Detail
+                {t('detail.moreDetail')}
               </button>
             </div>
           </div>

@@ -3,12 +3,13 @@ import RecipeCard from "../component/RecipeCard";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 function FavoritePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [favorites, setFavorites] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { t } = useTranslation('favorite');
   // Auth state
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -90,28 +91,28 @@ function FavoritePage() {
       <Navbar />
 
       <div className="mt-2 flex flex-col max-w-7xl m-auto w-[60%]">
-        <h1 className="p-8 text-5xl">Favorite</h1>
+        <h1 className="p-8 text-5xl">{t('title')}</h1>
 
         <div className="mt-3 mb-20">
           {!isLoggedIn ? (
             <p className="mt-5 text-center text-2xl">
-              This feature is available to registered users only. Please{" "}
+              {t('loginRequired')}{" "}
               <Link to="/login" className="text-[#ce441a] font-medium">
-                log in
+                {t('login')}
               </Link>{" "}
-              or{" "}
+              {t('or')}{" "}
               <Link to="/signup" className="text-[#ce441a] font-medium">
-                sign up
+                {t('signup')}
               </Link>{" "}
-              first.
+              {t('first')}
             </p>
           ) : loading ? (
-            <p className="mt-5 text-center text-2xl">Loading favorites...</p>
+            <p className="mt-5 text-center text-2xl">{t('loadingFavorites')}</p>
           ) : favorites.length > 0 ? (
             <RecipeCard recipes={favorites} />
           ) : (
             <p className="mt-5 text-center text-2xl">
-              You don't have any favorite recipes yet.
+              {t('noFavorites')}
             </p>
           )}
         </div>

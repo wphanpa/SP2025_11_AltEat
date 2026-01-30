@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { addFavorite, removeFavorite, getFavoriteIds } from "../lib/favorite";
 import FavoriteButton from "./FavoriteButton";
+import { useTranslation } from 'react-i18next';
+
 
 export interface Recipe {
   id: number;
@@ -17,6 +19,7 @@ interface RecipeCardProps {
 function RecipeCard({ recipes }: RecipeCardProps) {
   const navigate = useNavigate();
   const [favoriteRecipe, setFavoriteRecipe] = useState<number[]>([]);
+  const {t} = useTranslation('common');
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -101,7 +104,7 @@ function RecipeCard({ recipes }: RecipeCardProps) {
                 onClick={() => navigate(`/recipe/${recipe.id}`)}
                 className="my-4 px-6 py-2 bg-[#562C0C] text-white rounded-full text-sm hover:bg-[#3d1f08] transition-colors cursor-pointer"
               >
-                More
+                {t('more')}
               </button>
             </div>
           </div>

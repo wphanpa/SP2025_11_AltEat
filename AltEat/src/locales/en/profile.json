@@ -1,0 +1,51 @@
+{
+  "title": "Profile",
+  "sections": {
+    "info": "Profile Information",
+    "preferences": "Preferences"
+  },
+  "fields": {
+    "username": "Username",
+    "email": "Email",
+    "noUsername": "No username",
+    "avatar": "Profile Picture"
+  },
+  "preferences": {
+    "language": "Chatbot Language Preference",
+    "cuisine": "Cuisine Preferences",
+    "skillLevel": "Cooking Skill Level",
+    "avoidIngredients": "Ingredients to Avoid",
+    "addIngredient": "Add ingredient...",
+    "add": "Add"
+  },
+  "skillLevels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert"
+  },
+  "cuisines": {
+    "thai": "Thai",
+    "italian": "Italian",
+    "chinese": "Chinese",
+    "japanese": "Japanese",
+    "mexican": "Mexican",
+    "indian": "Indian",
+    "french": "French",
+    "korean": "Korean",
+    "vietnamese": "Vietnamese"
+  },
+  "actions": {
+    "signOut": "Sign Out",
+    "save": "Save Preferences",
+    "saving": "Saving...",
+    "back": "Back"
+  },
+  "messages": {
+    "imageUpdated": "Profile image updated",
+    "usernameUpdated": "Username updated",
+    "preferencesSaved": "Preferences saved",
+    "imageTooLarge": "Image must be under 5MB",
+    "loading": "Loading..."
+  }
+}

@@ -1,4 +1,5 @@
 import Popup from "reactjs-popup"
+import { useTranslation } from "react-i18next"
 
 export interface IngredientDetail {
   ingredient_id: number
@@ -24,11 +25,19 @@ interface IngredientDetailPopupProps {
 }
 
 function IngredientDetailPopup({ ingredient, tags, isOpen, onClose }: IngredientDetailPopupProps) {
+  const { t } = useTranslation('ingredient')
+
   if (!ingredient) return null
 
   const renderArrayField = (label: String, values:string[] | null) => {
     if (!values || values.length === 0) return null;
-
+    if (label === "Other Names") {
+      label = t('detail.otherNames')
+    } else if (label === "Cooking Methods") {
+      label = t('detail.cookingMethods')
+    } else {
+      label = t(`detail.${label.replace(/ /g, "_").toLowerCase()}`);
+    }
     return (
       <div className="text-gray-700">
         <span className="font-semibold text-[#562C0C]">{label}:</span>{" "}

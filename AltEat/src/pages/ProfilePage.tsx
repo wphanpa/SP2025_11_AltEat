@@ -15,10 +15,11 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const LANGUAGES = [
   { code: "en", name: "English" },
-  { code: "th", name: "Thai" },
+  { code: "th", name: "ไทย" },
 ];
 
 const CUISINES = [
@@ -42,6 +43,7 @@ const SKILL_LEVELS = [
 
 
 export default function ProfilePage() {
+  const { t } = useTranslation("profile");
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -90,7 +92,7 @@ export default function ProfilePage() {
     if (!file || !profile) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: "error", text: "Image must be under 5MB" });
+      setMessage({ type: "error", text: t("messages.imageTooLarge") });
       return;
     }
 
@@ -116,7 +118,7 @@ export default function ProfilePage() {
         .eq("id", profile.id);
 
       await refreshProfile();
-      setMessage({ type: "success", text: "Profile image updated" });
+      setMessage({ type: "success", text: t("messages.imageUpdated") });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message });
     } finally {
@@ -137,7 +139,7 @@ export default function ProfilePage() {
 
       await refreshProfile();
       setEditingUsername(false);
-      setMessage({ type: "success", text: "Username updated" });
+      setMessage({ type: "success", text: t("messages.usernameUpdated") });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message });
     } finally {
@@ -161,7 +163,7 @@ export default function ProfilePage() {
         })
         .eq("id", profile.id);
 
-      setMessage({ type: "success", text: "Preferences saved" });
+      setMessage({ type: "success", text: t("messages.preferencesSaved") });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message });
     } finally {
@@ -199,7 +201,7 @@ export default function ProfilePage() {
       <>
         <Navbar />
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FACE9B] via-[#FFBD9E] via-60% to-[#E6896D]">
-          <div className="text-lg">Loading...</div>
+          <div className="text-lg">{t("messages.loading")}</div>
         </div>
       </>
     );
@@ -214,7 +216,7 @@ export default function ProfilePage() {
         className="fixed top-20 left-4 md:left-6 z-40 flex items-center gap-2 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-md hover:bg-white transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Back</span>
+        <span className="hidden sm:inline">{t("actions.back")}</span>
       </button>
 
       <div className="min-h-screen bg-gradient-to-b from-[#FACE9B] via-[#FFBD9E] via-60% to-[#E6896D] py-8 px-4">
@@ -309,7 +311,7 @@ export default function ProfilePage() {
                     ) : (
                       <div className="flex items-center gap-2 justify-center">
                         <h2 className="text-xl font-bold text-foreground">
-                          {profile?.username || "No username"}
+                          {profile?.username || t("fields.noUsername")}
                         </h2>
                         <button
                           type="button"
@@ -336,7 +338,7 @@ export default function ProfilePage() {
                   className="w-full mt-6 flex items-center justify-center gap-2 border border-red-500 text-red-500 py-2.5 rounded-lg hover:bg-red-50 transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {t("actions.signOut")}
                 </button>
               </div>
             </div>
@@ -347,7 +349,7 @@ export default function ProfilePage() {
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <div className="flex items-center gap-2 mb-6">
                   <Settings className="h-5 w-5 text-[#ce441a]" />
-                  <h3 className="text-lg font-semibold">Preferences</h3>
+                  <h3 className="text-lg font-semibold">{t("sections.preferences")}</h3>
                 </div>
                   <div className="space-y-6">
                     {/* Language Preference */}
@@ -356,7 +358,7 @@ export default function ProfilePage() {
                         htmlFor="language"
                         className="block text-sm font-medium mb-2"
                       >
-                        Chabot Language Preference
+                        {t("preferences.language")}
                       </label>
                       <select
                         id="language"
@@ -375,7 +377,7 @@ export default function ProfilePage() {
                     {/* Cuisine Preferences */}
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Cuisine Preferences
+                        {t("preferences.cuisine")}
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {CUISINES.map((cuisine) => (
@@ -389,7 +391,7 @@ export default function ProfilePage() {
                                 : "bg-[#FFF3DB] text-foreground hover:bg-[#FBB496]"
                             }`}
                           >
-                            {cuisine}
+                            {t(`cuisines.${cuisine.toLowerCase()}`)}
                           </button>
                         ))}
                       </div>
@@ -401,7 +403,7 @@ export default function ProfilePage() {
                       htmlFor="skill"
                       className="block text-sm font-medium mb-2"
                     >
-                      Cooking Skill Level
+                      {t("preferences.skillLevel")}
                     </label>
                     <select
                       id="skill"
@@ -411,7 +413,7 @@ export default function ProfilePage() {
                     >
                       {SKILL_LEVELS.map((level) => (
                         <option key={level.value} value={level.value}>
-                          {level.label}
+                          {t(`skillLevels.${level.value}`)}
                         </option>
                       ))}
                     </select>
@@ -420,7 +422,7 @@ export default function ProfilePage() {
                   {/* Avoid Ingredients */}
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Ingredients to Avoid
+                      {t("preferences.avoidIngredients")}
                     </label>
                     <div className="flex gap-2 mb-2">
                       <input
@@ -428,7 +430,7 @@ export default function ProfilePage() {
                         value={newIngredient}
                         onChange={(e) => setNewIngredient(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && addIngredient()}
-                        placeholder="Add ingredient..."
+                        placeholder={t("preferences.addIngredient")}
                         className="flex-1 border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#e48f75]"
                       />
                       <button
@@ -436,7 +438,7 @@ export default function ProfilePage() {
                         onClick={addIngredient}
                         className="bg-[#e48f75] text-white px-4 py-2 rounded-lg hover:bg-[#E6896D] transition-colors"
                       >
-                        Add
+                        {t("preferences.add")}
                       </button>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -464,7 +466,7 @@ export default function ProfilePage() {
                     disabled={saving}
                     className="w-full bg-[#e48f75] text-white py-2.5 rounded-lg hover:bg-[#E6896D] transition-colors font-medium disabled:opacity-50"
                   >
-                    {saving ? "Saving..." : "Save Preferences"}
+                    {saving ? t("actions.saving") : t("actions.save")}
                   </button>
                 </div>
               </div>

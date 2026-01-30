@@ -9,6 +9,7 @@ import { supabase } from "../lib/supabase"
 import type { IngredientDetail } from "../component/IngredientDetailPopup"
 import search from "../assets/search.png"
 import context from "../assets/context.png"
+import { useTranslation } from 'react-i18next'
 
 interface Filters {
   taste: string[]
@@ -18,6 +19,7 @@ interface Filters {
 }
 
 function IngredientSearchpage() {
+  const { t } = useTranslation(['ingredient', 'common'])
   const [ingredients, setIngredients] = useState<IngredientDetail[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -31,19 +33,19 @@ function IngredientSearchpage() {
 
   const filterSection = [
     {
-      title: "Taste",
+      title: t('ingredient:filters.taste'),
       items: ingredientFilter[0].taste,
     },
     {
-      title: "Texture",
+      title: t('ingredient:filters.texture'),
       items: ingredientFilter[0].texture,
     },
     {
-      title: "Color",
+      title: t('ingredient:filters.color'),
       items: ingredientFilter[0].color,
     },
     {
-      title: "Shape",
+      title: t('ingredient:filters.shape'),
       items: ingredientFilter[0].shape,
     },
   ]
@@ -107,11 +109,25 @@ function IngredientSearchpage() {
 
   // Handle filter changes from sidebar
   const handleFilterChange = (filterType: string, selectedItems: string[]) => {
+    console.log("Filter changed:", filterType, selectedItems); // Debug log
+    
+    let key = filterType.toLowerCase()
+
+    if (key === t('ingredient:filters.taste').toLowerCase()) {
+      key = "taste"
+    } else if (key === t('ingredient:filters.texture').toLowerCase()) {
+      key = "texture"
+    } else if (key === t('ingredient:filters.color').toLowerCase()) {
+      key = "color"
+    } else if (key === t('ingredient:filters.shape').toLowerCase()) {
+      key = "shape"
+    }
+
     setFilters((prev) => ({
       ...prev,
-      [filterType]: selectedItems,
+      [key]: selectedItems,
     }))
-  }
+  } 
 
   // Handle search submission
   const handleSearch = async () => {
@@ -219,8 +235,8 @@ function IngredientSearchpage() {
               <div className="flex items-center mb-5">
                 {/* Title */}
                 <div>
-                  <h1 className="text-5xl mb-4">Ingredient with Context</h1>
-                  <p className="text-[16px]">Discover ingredient combinations that make every meal delicious.</p>
+                  <h1 className="text-5xl mb-4">{t('ingredient:search.title')}</h1>
+                  <p className="text-[16px]">{t('ingredient:search.subtitle')}</p>
                 </div>
                 <img src={context || "/placeholder.svg"} />
               </div>
@@ -234,7 +250,7 @@ function IngredientSearchpage() {
                 />
                 <input
                   type="text"
-                  placeholder="Search ingredients by context (e.g., 'black salty')..."
+                  placeholder={t('ingredient:search.searchPlaceholder')}
                   className="px-6 py-3 bg-white w-full rounded-[20px] outline-[1.5px] shadow-[0_8px_4px_rgba(0,0,0,0.25)]"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -247,17 +263,17 @@ function IngredientSearchpage() {
                 <div className="flex flex-col items-start mt-14">
                   {loading ? (
                     <div className="w-full flex justify-center py-12">
-                      <div className="text-xl text-[#562C0C]">Loading ingredients...</div>
+                      <div className="text-xl text-[#562C0C]">{t('ingredient:search.loadingIngredients')}</div>
                     </div>
                   ) : !hasSearched ? (
                     <div className="w-full flex flex-col items-center justify-center py-12 text-center">
-                      <div className="text-2xl text-[#562C0C] mb-2">Select filters or search to find ingredients</div>
-                      <p className="text-gray-500">Use the sidebar filters or search bar to discover ingredients</p>
+                      <div className="text-2xl text-[#562C0C] mb-2">{t('ingredient:search.selectFilters')}</div>
+                      <p className="text-gray-500">{t('ingredient:search.useFilters')}</p>
                     </div>
                   ) : ingredients.length === 0 ? (
                     <div className="w-full flex flex-col items-center justify-center py-12 text-center">
-                      <div className="text-2xl text-[#562C0C] mb-2">No ingredients found</div>
-                      <p className="text-gray-500">Try adjusting your filters or search terms</p>
+                      <div className="text-2xl text-[#562C0C] mb-2">{t('ingredient:search.noIngredientsFound')}</div>
+                      <p className="text-gray-500">{t('ingredient:search.adjustingFilters')}</p>
                     </div>
                   ) : (
                     <IngredientCard ingredients={ingredients} />

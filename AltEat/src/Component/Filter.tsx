@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 interface FilterProps {
   title: string;
@@ -7,6 +8,7 @@ interface FilterProps {
 }
 
 function Filter({ title, items, onFilterChange }: FilterProps) {
+  const { t } = useTranslation('common');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(false);
   const firstItems = items.slice(0, 6);
@@ -18,7 +20,7 @@ function Filter({ title, items, onFilterChange }: FilterProps) {
       : [...selectedItems, item];
 
     setSelectedItems(newSelected);
-    onFilterChange(title.toLowerCase(), newSelected);
+    onFilterChange(title, newSelected);
   };
 
   return (
@@ -81,7 +83,7 @@ function Filter({ title, items, onFilterChange }: FilterProps) {
               onClick={() => setExpanded(!expanded)}
               className="mt-5 m-auto px-4 py-2 bg-[#562C0C] rounded-3xl text-white cursor-pointer"
             >
-              {expanded ? "Show less" : "Show more"}
+              {expanded ? t('showLess') : t('showMore')}
             </button>
           )}
         </div>
