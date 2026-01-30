@@ -42,7 +42,7 @@ class RecipeWithSubsRequest(BaseModel):
 
 class RewriteRequest(BaseModel):
     recipe: str
-    original_ingredients: str
+    original_ingredients: str = ""
     old_ingredient: str
     new_ingredient: str
 

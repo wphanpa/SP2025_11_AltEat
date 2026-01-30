@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "Evaluation 1.2",
   "nodes": [
     {
       "parameters": {
@@ -16,14 +16,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -1408,
-        640
+        -2352,
+        1040
       ],
-      "id": "27ff9d37-9b07-4948-bf63-a1503ee5fc32",
+      "id": "6e7bfbe2-f325-4fdc-893d-1949546a1ad1",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "pq6fQF9nmpfxRiIw",
+          "id": "QKvg7lsxUt80J0Ai",
           "name": "OpenAi account"
         }
       }
@@ -268,10 +268,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -672,
-        320
+        -1792,
+        720
       ],
-      "id": "9ae9ac8d-1da7-4c84-b4ee-f1014620add8",
+      "id": "a2094496-fa27-4d9b-9fd1-6106299c89c4",
       "name": "Switch"
     },
     {
@@ -281,10 +281,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -992,
-        448
+        -2048,
+        848
       ],
-      "id": "4bc4708e-3d79-4928-bb81-f31f11f771f7",
+      "id": "7854fe5c-89d0-4199-9368-554f85173cec",
       "name": "Code in JavaScript"
     },
     {
@@ -294,10 +294,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -1312,
-        800
+        -2256,
+        1056
       ],
-      "id": "8d030c06-46ca-4d1c-ab8e-707e44721072",
+      "id": "218738c8-a84d-45b4-a200-2a806f2a049a",
       "name": "Simple Memory"
     },
     {
@@ -312,14 +312,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -192,
-        1648
+        -1312,
+        2048
       ],
-      "id": "db0027bb-c564-4a1d-931e-2a849b62e893",
+      "id": "02f25d9d-ce40-40fc-bfe2-a8395d9d0c79",
       "name": "OpenAI Chat Model1",
       "credentials": {
         "openAiApi": {
-          "id": "pq6fQF9nmpfxRiIw",
+          "id": "QKvg7lsxUt80J0Ai",
           "name": "OpenAi account"
         }
       }
@@ -333,11 +333,11 @@
           "parameters": [
             {
               "name": "=ingredient",
-              "value": "={{ $json.entities.ingredient }}"
+              "value": "={{ $json.entities.ingredient || \"\" }}"
             },
             {
               "name": "recipe",
-              "value": "={{ $json.entities.recipe }}"
+              "value": "={{ $json.entities.recipe || \"\" }}"
             }
           ]
         },
@@ -346,10 +346,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -160,
-        -352
+        -1264,
+        48
       ],
-      "id": "df2d8b88-c29e-4b5e-b90a-7cc0b3f1584f",
+      "id": "c9901241-0494-4caa-8f0f-9cbad8a621db",
       "name": "Substitution"
     },
     {
@@ -370,10 +370,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -144,
-        48
+        -1264,
+        448
       ],
-      "id": "59952495-083e-4375-a32e-75c4b84bba15",
+      "id": "745c06ce-4e61-43b1-b784-205bfd9d6839",
       "name": "Recipe Lookup"
     },
     {
@@ -406,10 +406,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -144,
-        256
+        -1264,
+        656
       ],
-      "id": "b52475a3-f44d-4fe8-bd2c-6e7bc0d5c373",
+      "id": "d8afb8fd-397c-4732-8401-cd903999ed50",
       "name": "Context Ingredients"
     },
     {
@@ -422,18 +422,6 @@
             {
               "name": "=ingredients",
               "value": "={{ $json.entities.ingredients }}"
-            },
-            {
-              "name": "session_id",
-              "value": "={{ $('When chat message received').item.json.sessionId }}"
-            },
-            {
-              "name": "message_id",
-              "value": "={{ $('When chat message received').item.json.messageId }}"
-            },
-            {
-              "name": "user_message",
-              "value": "={{ $('When chat message received').item.json.chatInput }}"
             }
           ]
         },
@@ -442,10 +430,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -144,
-        -144
+        -1264,
+        256
       ],
-      "id": "c2ed3ba1-0fff-4d15-9237-3519f6b79305",
+      "id": "1b4b60a9-ff48-4d0f-9e72-7c435c6a74c9",
       "name": "Recipe Suggestion"
     },
     {
@@ -456,10 +444,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        816,
-        448
+        -448,
+        880
       ],
-      "id": "5afc57af-7134-4ae6-877a-0c2ff5821033",
+      "id": "27e565f0-ee70-499c-87a1-3176f81787cb",
       "name": "Context  Respond"
     },
     {
@@ -467,16 +455,16 @@
         "promptType": "define",
         "text": "={{ $json.chatInput }}",
         "options": {
-          "systemMessage": "You are a recipe chatbot AI agent that performs both intent classification and entity extraction in a single response.\n\nTASK: Analyze user messages and return structured JSON with classification and extracted entities.\n\nCLASSIFICATION CATEGORIES:\n1. \"substitute\" (/substitute) - User wants to know what they can use instead of an ingredient (General inquiry).\n2. \"suggest\" (/suggest) - User wants recipe ideas based only on a list of ingredients.\n3. \"suggest_specific\" (/suggest_specific) - User wants recipe ideas based on ingredients PLUS a specific context/situation (e.g., \"healthy\", \"dinner\", \"quick\").\n4. \"lookup\" (/lookup) - User wants details (ingredients/steps) for a specific known dish.\n5. \"context\" (/context) - User provides structured attributes (taste, texture, color) to identify an ingredient.\n6. \"context_natural\" (/context_natural) - User provides a natural language description or sentence to identify an ingredient.\n7. \"similar\" (/similar) - User wants to find recipes that are similar to a specific dish.\n8. \"modify\" (/rewrite) - User wants to rewrite a recipe by swapping one specific ingredient for another (Old vs New).\n9. \"recipe_custom\" (/recipe_custom) - User wants to customize a recipe with multiple substitutes or general additions without specifying what to remove.\n10. \"other\" (/other) - Message doesn't fit cooking/recipe context.\n\n**ENTITY EXTRACTION RULES:**\nFor \"substitute\" classification:\n- Extract \"ingredient\": the item to be replaced.\n- Extract \"recipe\": the context dish (if mentioned).\n- Set others to null.\n\nFor \"suggest\" classification:\n- Extract \"ingredients\": list of available ingredients.\n- Extract \"situation\": any constraints or context mentioned (e.g., \"for dinner\", \"healthy\", \"vegan\", \"low carb\").\n- Set others to null.\n\nFor \"suggest_specific\" classification:\n- Extract \"ingredients\": list of available ingredients user mentions.\n- Extract \"situation\": any constraints or context mentioned (e.g., \"for dinner\", \"healthy\", \"vegan\", \"low carb\").\n- Set others to null.\n\nFor \"lookup\" classification:\n- Extract \"recipe\": the specific dish name.\n- Set others to null.\n\nFor \"context\" classification:\n- Extract \"attributes\": structured details (taste, texture, color, method).\n- Extract \"description\": the raw natural language description provided by the user (captures the full phrase).\n- Set others to null.\n\nFor \"context_natural\" classification:\n- Extract \"description\": the raw natural language description provided by the user (captures the full phrase).\n- Set others to null.\n\nFor \"similar\" classification:\n- Extract \"recipe\": the dish the user wants to find matches for.\n- Set others to null.\n\nFor \"modify\" classification:\n- Extract \"recipe\": the dish to customize.\n- Extract \"ingredient\": the old ingredient to remove/replace.\n- Extract \"replacement\": the new ingredient to add/use.\n\nFor \"recipe_custom\" classification:\n- Extract \"recipe\": the dish to customize.\n- Extract \"substitutes\": list of new ingredients to add or use.\n- Set others to null.\n\nSet others to null.\n- For \"other\" classification:\n- Set all entities to null.\n\nRESPONSE FORMAT (MUST be valid JSON):\nJSON:\n{\n  \"classification\": \"string\",  // One of the categories above\n  \"entities\": {\n    \"recipe\": \"string or null\",\n    \"ingredient\": \"string or null\",       // Old ingredient (for modify/substitute)\n    \"replacement\": \"string or null\",      // New ingredient (single, for modify)\n    \"substitutes\": [\"array\"] or null,     // List of new ingredients (for recipe_custom)\n    \"ingredients\": [\"array\"] or null,     // Available ingredients (for suggest)\n    \"situation\": \"string or null\",        // Context (e.g., \"dinner\", \"healthy\")\n    \"description\": \"string or null\",      // Natural description (for context_natural)\n    \"attributes\": {\n       \"taste\": \"string or null\",\n       \"texture\": \"string or null\",\n       \"color\": \"string or null\",\n       \"method\": \"string or null\"\n    }\n  },\n  \"confidence\": 0.0-1.0\n}\n\n**CLASSIFICATION GUIDELINES:**\nSUBSTITUTE (General Inquiry):\n- Keywords: \"substitute\", \"alternative\", \"what can I use instead\", \"swap\".\n- Focus: Asking for options to replace something.\n- Example: \"What is a substitute for milk?\"\n\nSUGGEST (Discovery):\n- Keywords: \"make\", \"cook\", \"recipes with\", \"I have X\", \"ideas for dinner\".\n- Focus: Finding new recipes based on a list of items or a situation.\n- Note: Captures specific contexts like \"healthy\" or \"for breakfast\".\n\nLOOKUP (Information):\n- Keywords: \"how to make\", \"recipe for\", \"ingredients in\", \"details\".\n- Focus: Getting standard instructions for a known dish.\n\nCONTEXT (Identification):\n- Keywords: \"what is this\", \"looks like\", \"tastes like\", \"green vegetable\".\n- Focus: User describes an ingredient they can't name.\n\nSIMILAR (Recommendation):\n- Keywords: \"similar to\", \"like\", \"dishes like\", \"resembles\".\n- Focus: Finding a recipe comparable to another specific recipe.\n- Example: \"Show me recipes similar to Lasagna.\"\n\nMODIFY (Customization/Rewrite):\n- Keywords: \"rewrite\", \"custom version\", \"make X using Y instead of Z\", \"recipe with changes\".\n- Focus: Requesting a full recipe text that has been altered with specific swaps.\n- Example: \"Give me a pancake recipe using bananas instead of eggs.\"\n\nOTHER:\n- Greetings, weather, non-food queries.\n\n**CLASSIFICATION GUIDELINES (Priority Rules):**\n1. Suggest vs. Suggest Specific:\n- If the user mentions only ingredients (\"I have eggs and flour\"), classify as \"suggest\".\n- If the user mentions ingredients AND a constraint/occasion (\"...for a healthy breakfast\", \"...that is spicy\"), classify as \"suggest_specific\".\n\n2. Context vs. Context Natural:\n- If the user gives a descriptive sentence (\"What is the green crunchy thing in salad?\"), classify as \"context_natural\".\n- Only use \"context\" if the user explicitly lists distinct attributes separately (rare). Default to \"context_natural\" for descriptions.\n\n3. Modify vs. Recipe Custom:\n- If the user specifies a clear \"swap X for Y\" (1-to-1 replacement), classify as \"modify\".\n- If the user lists multiple items to add/use (\"Make pancakes using bananas, oat milk, and honey\"), classify as \"recipe_custom\".\n\n**CONFIDENCE SCORING:**\n0.9-1.0: Precise intent and entities.\n0.7-0.8: Clear intent, minor ambiguity.\n0.5-0.6: Unclear intent or missing key entities.\n< 0.5: Ambiguous.\n\nEXAMPLES:\n\nCategory: *SUBSTITUTE*\nInput: \"I need to substitute eggs in my chocolate cake.\" Output: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"eggs\", \"replacement\": null, \"recipe\": \"chocolate cake\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"Is there a good alternative for heavy cream?\" \nOutput: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"heavy cream\", \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *SUGGEST*\nInput: \"I have chicken and rice, what can I make for a quick dinner?\" \nOutput: {\"classification\": \"suggest\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": [\"chicken\", \"rice\"], \"situation\": \"quick dinner\", \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"Give me some keto recipes using spinach.\" \nOutput: {\"classification\": \"suggest\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": [\"spinach\"], \"situation\": \"keto\", \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *LOOKUP*\nInput: \"How do I cook Pad Thai?\" \nOutput: {\"classification\": \"lookup\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Pad Thai\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"What are the ingredients for Beef Wellington?\" \nOutput: {\"classification\": \"lookup\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Beef Wellington\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nCategory: *CONTEXT*\nInput: \"What is that red fruit that tastes sour?\" \nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": \"red fruit that tastes sour\", \"attributes\": {\"taste\": \"sour\", \"texture\": null, \"color\": \"red\", \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"I need an ingredient that is crunchy and green for a salad.\" \nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": \"crunchy and green for a salad\", \"attributes\": {\"taste\": null, \"texture\": \"crunchy\", \"color\": \"green\", \"method\": null}}, \"confidence\": 0.85}\n\nCategory: *SIMILAR*\nInput: \"Show me recipes similar to Carbonara.\" \nOutput: {\"classification\": \"similar\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Carbonara\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"I love Tom Yum Kung, what else is like that?\" \nOutput: {\"classification\": \"similar\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Tom Yum Kung\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *MODIFY*\nInput: \"I want to make Lasagna but use zucchini instead of pasta sheets.\" \nOutput: {\"classification\": \"modify\", \"entities\": {\"ingredient\": \"pasta sheets\", \"replacement\": \"zucchini\", \"recipe\": \"Lasagna\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"Rewrite the brownie recipe using applesauce in place of oil.\" \nOutput: {\"classification\": \"modify\", \"entities\": {\"ingredient\": \"oil\", \"replacement\": \"applesauce\", \"recipe\": \"brownie\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nCategory: *SUGGEST_SPECIFIC* \nInput: \"I need a vegan dinner recipe using tofu and broccoli.\" Output: {\"classification\": \"suggest_specific\", \"entities\": {\"ingredients\": [\"tofu\", \"broccoli\"], \"situation\": \"vegan dinner\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.98}\n\nInput: \"What can I make with eggs and milk that is gluten-free?\" \nOutput: {\"classification\": \"suggest_specific\", \"entities\": {\"ingredients\": [\"eggs\", \"milk\"], \"situation\": \"gluten-free\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nCategory: *CONTEXT_NATURAL *\nInput: \"What is the spice that smells like licorice?\" \nOutput: {\"classification\": \"context_natural\", \"entities\": {\"description\": \"spice that smells like licorice\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"ingredients\": null, \"situation\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"I am looking for a leafy green that is bitter when cooked.\" \nOutput: {\"classification\": \"context_natural\", \"entities\": {\"description\": \"leafy green that is bitter when cooked\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"ingredients\": null, \"situation\": null, \"attributes\": {\"taste\": \"bitter\", \"texture\": null, \"color\": \"green\", \"method\": \"cooked\"}}, \"confidence\": 0.9}\n\nCategory: *RECIPE_CUSTOM*\nInput: \"Make a customized pizza recipe with pineapple, ham, and extra cheese.\" \nOutput: {\"classification\": \"recipe_custom\", \"entities\": {\"recipe\": \"pizza\", \"substitutes\": [\"pineapple\", \"ham\", \"extra cheese\"], \"ingredient\": null, \"replacement\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"I want a burger recipe using turkey patty and avocado.\" \nOutput: {\"classification\": \"recipe_custom\", \"entities\": {\"recipe\": \"burger\", \"substitutes\": [\"turkey patty\", \"avocado\"], \"ingredient\": null, \"replacement\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *OTHER*\nInput: \"Hello, are you a robot?\" \nOutput: {\"classification\": \"other\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nIMPORTANT:\n- Return JSON in a single line.\n- Do not include markdown formatting like *JSON*\" in the final output.\n- Map distinct user intents to the specific categories defined above."
+          "systemMessage": "You are a recipe chatbot AI agent that performs both intent classification and entity extraction in a single response.\n\nTASK: Analyze user messages and return structured JSON with classification and extracted entities.\n\nCLASSIFICATION CATEGORIES:\n1. \"substitute\" (/substitute) - User wants to know what they can use instead of an ingredient (General inquiry).\n2. \"suggest\" (/suggest) - User wants recipe ideas based only on a list of ingredients.\n3. \"suggest_specific\" (/suggest_specific) - User wants recipe ideas based on ingredients PLUS a specific context/situation (e.g., \"healthy\", \"dinner\", \"quick\").\n4. \"lookup\" (/lookup) - User wants details (ingredients/steps) for a specific known dish.\n5. \"context\" (/context) - User provides structured attributes (taste, texture, color) to identify an ingredient.\n6. \"context_natural\" (/context_natural) - User provides a natural language description or sentence to identify an ingredient.\n7. \"similar\" (/similar) - User wants to find recipes that are similar to a specific dish.\n8. \"modify\" (/rewrite) - User wants to rewrite a recipe by swapping one specific ingredient for another (Old vs New).\n9. \"recipe_custom\" (/recipe_custom) - User wants to customize a recipe with multiple substitutes or general additions without specifying what to remove.\n10. \"other\" (/other) - Message doesn't fit cooking/recipe context.\n\n**ENTITY EXTRACTION RULES:**\nFor \"substitute\" classification:\n- Extract \"ingredient\": the item to be replaced.\n- Extract \"recipe\": the context dish (if mentioned).\n- Set others to null.\n\nFor \"suggest\" classification:\n- Extract \"ingredients\": list of available ingredients.\n- Set others to null.\n\nFor \"suggest_specific\" classification:\n- Extract \"ingredients\": list of available ingredients user mentions.\n- Extract \"situation\": any constraints or context mentioned (e.g., \"for dinner\", \"healthy\", \"vegan\", \"low carb\").\n- Set others to null.\n\nFor \"lookup\" classification:\n- Extract \"recipe\": the specific dish name.\n- Set others to null.\n\nFor \"context\" classification:\n- Extract \"attributes\": structured details (taste, texture, color, method).\n- Set others to null.\n\nFor \"context_natural\" classification:\n- Extract \"description\": the raw natural language description provided by the user (captures the full phrase).\n- Set others to null.\n\nFor \"similar\" classification:\n- Extract \"recipe\": the dish the user wants to find matches for.\n- Set others to null.\n\nFor \"modify\" classification:\n- Extract \"recipe\": the dish to customize.\n- Extract \"ingredient\": the old ingredient to remove/replace.\n- Extract \"replacement\": the new ingredient to add/use.\n\nFor \"recipe_custom\" classification:\n- Extract \"recipe\": the dish to customize.\n- Extract \"substitutes\": list of new ingredients to add or use.\n- Set others to null.\n\nSet others to null.\n- For \"other\" classification:\n- Set all entities to null.\n\nRESPONSE FORMAT (MUST be valid JSON):\nJSON:\n{\n  \"classification\": \"string\",  // One of the categories above\n  \"entities\": {\n    \"recipe\": \"string or null\",\n    \"ingredient\": \"string or null\",       // Old ingredient (for modify/substitute)\n    \"replacement\": \"string or null\",      // New ingredient (single, for modify)\n    \"substitutes\": [\"array\"] or null,     // List of new ingredients (for recipe_custom)\n    \"ingredients\": [\"array\"] or null,     // Available ingredients (for suggest)\n    \"situation\": \"string or null\",        // Context (e.g., \"dinner\", \"healthy\")\n    \"description\": \"string or null\",      // Natural description (for context_natural)\n    \"attributes\": {\n       \"taste\": \"string or null\",\n       \"texture\": \"string or null\",\n       \"color\": \"string or null\",\n       \"method\": \"string or null\"\n    }\n  },\n  \"confidence\": 0.0-1.0\n}\n\n**CLASSIFICATION GUIDELINES:**\nSUBSTITUTE (General Inquiry):\n- Keywords: \"substitute\", \"alternative\", \"what can I use instead\", \"swap\".\n- Focus: Asking for options to replace something.\n- Example: \"What is a substitute for milk?\"\n\nSUGGEST (Discovery):\n- Keywords: \"make\", \"cook\", \"recipes with\", \"I have X\", \"ideas for dinner\".\n- Focus: Finding new recipes based on a list of items or a situation.\n- Note: Captures specific contexts like \"healthy\" or \"for breakfast\".\n\nLOOKUP (Information):\n- Keywords: \"how to make\", \"recipe for\", \"ingredients in\", \"details\".\n- Focus: Getting standard instructions for a known dish.\n\nCONTEXT (Identification):\n- Keywords: \"what is this\", \"looks like\", \"tastes like\", \"green vegetable\".\n- Focus: User describes an ingredient they can't name.\n\nSIMILAR (Recommendation):\n- Keywords: \"similar to\", \"like\", \"dishes like\", \"resembles\".\n- Focus: Finding a recipe comparable to another specific recipe.\n- Example: \"Show me recipes similar to Lasagna.\"\n\nMODIFY (Customization/Rewrite):\n- Keywords: \"rewrite\", \"custom version\", \"make X using Y instead of Z\", \"recipe with changes\".\n- Focus: Requesting a full recipe text that has been altered with specific swaps.\n- Example: \"Give me a pancake recipe using bananas instead of eggs.\"\n\nOTHER:\n- Greetings, weather, non-food queries.\n\n**CLASSIFICATION GUIDELINES (Priority Rules):**\n1. Suggest vs. Suggest Specific:\n- If the user mentions only ingredients (\"I have eggs and flour\"), classify as \"suggest\".\n- If the user mentions ingredients AND a constraint/occasion (\"...for a healthy breakfast\", \"...that is spicy\"), classify as \"suggest_specific\".\n\n2. Context vs. Context Natural:\n- If the user gives a descriptive sentence (\"What is the green crunchy thing in salad?\"), classify as \"context_natural\".\n- Only use \"context\" if the user explicitly lists distinct attributes separately (rare). Default to \"context_natural\" for descriptions.\n\n3. Modify vs. Recipe Custom:\n- If the user specifies a clear \"swap X for Y\" (1-to-1 replacement), classify as \"modify\".\n- If the user lists multiple items to add/use (\"Make pancakes using bananas, oat milk, and honey\"), classify as \"recipe_custom\".\n\n**CONFIDENCE SCORING:**\n0.9-1.0: Precise intent and entities.\n0.7-0.8: Clear intent, minor ambiguity.\n0.5-0.6: Unclear intent or missing key entities.\n< 0.5: Ambiguous.\n\nEXAMPLES:\n\nCategory: *SUBSTITUTE*\nInput: \"I need to substitute eggs in my chocolate cake.\" Output: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"eggs\", \"replacement\": null, \"recipe\": \"chocolate cake\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"Is there a good alternative for heavy cream?\" \nOutput: {\"classification\": \"substitute\", \"entities\": {\"ingredient\": \"heavy cream\", \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *SUGGEST*\nInput: \"I have chicken and rice, what can I make?\" \nOutput: {\"classification\": \"suggest\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": [\"chicken\", \"rice\"], \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"Give me some recipes using spinach.\" \nOutput: {\"classification\": \"suggest\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": [\"spinach\"], \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *LOOKUP*\nInput: \"How do I cook Pad Thai?\" \nOutput: {\"classification\": \"lookup\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Pad Thai\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"What are the ingredients for Beef Wellington?\" \nOutput: {\"classification\": \"lookup\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Beef Wellington\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nCategory: *CONTEXT*\nInput: \"What is that red fruit that tastes sour?\" \nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": null\", \"attributes\": {\"taste\": \"sour\", \"texture\": null, \"color\": \"red\", \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"I need an ingredient that is crunchy and green for a salad.\" \nOutput: {\"classification\": \"context\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": \"crunchy\", \"color\": \"green\", \"method\": null}}, \"confidence\": 0.85}\n\nCategory: *SIMILAR*\nInput: \"Show me recipes similar to Carbonara.\" \nOutput: {\"classification\": \"similar\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Carbonara\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"I love Tom Yum Kung, what else is like that?\" \nOutput: {\"classification\": \"similar\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": \"Tom Yum Kung\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *MODIFY*\nInput: \"I want to make Lasagna but use zucchini instead of pasta sheets.\" \nOutput: {\"classification\": \"modify\", \"entities\": {\"ingredient\": \"pasta sheets\", \"replacement\": \"zucchini\", \"recipe\": \"Lasagna\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nInput: \"Rewrite the brownie recipe using applesauce in place of oil.\" \nOutput: {\"classification\": \"modify\", \"entities\": {\"ingredient\": \"oil\", \"replacement\": \"applesauce\", \"recipe\": \"brownie\", \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nCategory: *SUGGEST_SPECIFIC* \nInput: \"I need a vegan dinner recipe using tofu and broccoli.\" Output: {\"classification\": \"suggest_specific\", \"entities\": {\"ingredients\": [\"tofu\", \"broccoli\"], \"situation\": \"vegan dinner\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.98}\n\nInput: \"What can I make with eggs and milk that is gluten-free?\" \nOutput: {\"classification\": \"suggest_specific\", \"entities\": {\"ingredients\": [\"eggs\", \"milk\"], \"situation\": \"gluten-free\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nCategory: *CONTEXT_NATURAL *\nInput: \"What is the spice that smells like licorice?\" \nOutput: {\"classification\": \"context_natural\", \"entities\": {\"description\": \"spice that smells like licorice\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"ingredients\": null, \"situation\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"I am looking for a leafy green that is bitter when cooked.\" \nOutput: {\"classification\": \"context_natural\", \"entities\": {\"description\": \"leafy green that is bitter when cooked\", \"recipe\": null, \"ingredient\": null, \"replacement\": null, \"substitutes\": null, \"ingredients\": null, \"situation\": null, \"attributes\": {\"taste\": \"bitter\", \"texture\": null, \"color\": \"green\", \"method\": \"cooked\"}}, \"confidence\": 0.9}\n\nCategory: *RECIPE_CUSTOM*\nInput: \"Make a customized pizza recipe with pineapple, ham, and extra cheese.\" \nOutput: {\"classification\": \"recipe_custom\", \"entities\": {\"recipe\": \"pizza\", \"substitutes\": [\"pineapple\", \"ham\", \"extra cheese\"], \"ingredient\": null, \"replacement\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.95}\n\nInput: \"I want a burger recipe using turkey patty and avocado.\" \nOutput: {\"classification\": \"recipe_custom\", \"entities\": {\"recipe\": \"burger\", \"substitutes\": [\"turkey patty\", \"avocado\"], \"ingredient\": null, \"replacement\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nCategory: *OTHER*\nInput: \"Hello, are you a robot?\" \nOutput: {\"classification\": \"other\", \"entities\": {\"ingredient\": null, \"replacement\": null, \"recipe\": null, \"ingredients\": null, \"situation\": null, \"description\": null, \"attributes\": {\"taste\": null, \"texture\": null, \"color\": null, \"method\": null}}, \"confidence\": 0.9}\n\nIMPORTANT:\n- Return JSON in a single line.\n- Do not include markdown formatting like *JSON*\" in the final output.\n- Map distinct user intents to the specific categories defined above."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1408,
-        448
+        -2352,
+        848
       ],
-      "id": "05ebebfc-55a3-4636-a9b6-a4e2451a120e",
+      "id": "c9a3ef98-15e3-453c-b298-b89ac6a283cc",
       "name": "Classify AI Agent"
     },
     {
@@ -488,10 +476,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -176,
-        1408
+        -1296,
+        1808
       ],
-      "id": "1983e162-2e0a-4686-9f64-940d8276dc30",
+      "id": "c93f1065-1f4a-4f01-be56-1debc29d85f6",
       "name": "Conversational AI Agent"
     },
     {
@@ -501,10 +489,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        368,
-        1408
+        -752,
+        1808
       ],
-      "id": "ab539a54-9788-47be-a59e-0b3f2e59c149",
+      "id": "4937e457-7efe-4059-b7b6-f45af0967ccc",
       "name": "Respond"
     },
     {
@@ -518,10 +506,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        464,
-        480
+        -800,
+        880
       ],
-      "id": "8c30bcf4-27fe-45ed-9253-0248138e857c",
+      "id": "340fe7fc-a197-44c0-8cb7-7413bb3ffe84",
       "name": "AI Agent"
     },
     {
@@ -536,14 +524,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        464,
-        640
+        -800,
+        1040
       ],
-      "id": "01b6a81e-5db1-41ae-95d0-ac7b40a30609",
+      "id": "eaba2fd2-b8d1-4afc-87a2-1748c7ca1da5",
       "name": "OpenAI Chat Model2",
       "credentials": {
         "openAiApi": {
-          "id": "pq6fQF9nmpfxRiIw",
+          "id": "QKvg7lsxUt80J0Ai",
           "name": "OpenAi account"
         }
       }
@@ -555,10 +543,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        560,
-        688
+        -704,
+        1088
       ],
-      "id": "c3a1b9f1-2749-41fd-a0be-03b979d18fd4",
+      "id": "8270795b-2c74-4b0e-8a33-cc814910da86",
       "name": "Simple Memory1"
     },
     {
@@ -568,10 +556,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -96,
-        1632
+        -1200,
+        2032
       ],
-      "id": "e74d9c36-9e32-405d-b415-ab0aced47885",
+      "id": "db136428-6b63-4ee7-8931-5c5d4fa5201c",
       "name": "Simple Memory2"
     },
     {
@@ -583,38 +571,14 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1680,
-        448
+        -2608,
+        848
       ],
-      "id": "1b49cb40-6b77-4ffc-adb0-efd89de44e52",
+      "id": "c1a5b67d-d5fb-4421-a77e-3079036c1c7d",
       "name": "When chat message received",
       "webhookId": "f5e289b6-4914-4c86-ade9-b5a99970a807",
       "executeOnce": false,
       "alwaysOutputData": false
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "http://0.0.0.0:8080/similar",
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "=recipe",
-              "value": "={{ $json.entities.recipe }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -144,
-        480
-      ],
-      "id": "2e09319c-e770-4454-af08-dd6f2de09069",
-      "name": "similar"
     },
     {
       "parameters": {
@@ -642,10 +606,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -144,
-        656
+        -1264,
+        1056
       ],
-      "id": "6a7165a5-1679-4fbd-9816-a2df1531e7bf",
+      "id": "357bfbcd-f2c8-437b-bef4-9e0c2044b344",
       "name": "Modify Recipe With new ingredient"
     },
     {
@@ -670,10 +634,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -144,
-        1216
+        -1264,
+        1616
       ],
-      "id": "0d4155d5-52f5-4387-84f4-9ef4eb136f2c",
+      "id": "e5de8dea-6399-449b-8031-649d50bfdb13",
       "name": "Recipe_custom"
     },
     {
@@ -698,10 +662,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -144,
-        848
+        -1264,
+        1248
       ],
-      "id": "c1fcf1e4-9e47-4c6b-b129-c6251d23dcaf",
+      "id": "568eb81f-5179-4f6d-b827-b7a54616c3d5",
       "name": "Suggest Specific"
     },
     {
@@ -722,11 +686,35 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -144,
-        1040
+        -1264,
+        1440
       ],
-      "id": "c7650990-0a3f-4624-bf21-fbcd4a2b5ece",
+      "id": "f067c348-0015-49b1-a4ab-75b725d7ca76",
       "name": "Context Natural"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://0.0.0.0:8080/similar",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=recipe",
+              "value": "={{ $json.entities.recipe }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1264,
+        880
+      ],
+      "id": "037807e6-3867-43ac-938c-a46e7d536fd7",
+      "name": "Similar"
     }
   ],
   "pinData": {},
@@ -774,7 +762,7 @@
         ],
         [
           {
-            "node": "similar",
+            "node": "Similar",
             "type": "main",
             "index": 0
           }
@@ -822,17 +810,6 @@
           {
             "node": "Switch",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "Classify AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -970,17 +947,6 @@
         ]
       ]
     },
-    "similar": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Modify Recipe With new ingredient": {
       "main": [
         [
@@ -1024,20 +990,39 @@
           }
         ]
       ]
+    },
+    "Similar": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Classify AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
-    "availableInMCP": false,
-    "timeSavedMode": "fixed",
-    "callerPolicy": "workflowsFromSameOwner"
+    "availableInMCP": false
   },
-  "versionId": "047fa187-50e8-4ddd-8283-9beea3c8b766",
+  "versionId": "b3df0799-a4fb-4a9e-b105-e87fd5ca8fce",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "2edc76cc77c19c1265ff5657eebf603b3535cc0fdcb9dfa0475ac1335b0cc9cf"
+    "instanceId": "27e90aa2c3dadb26f34294f4f0bd3729ad99c4f6809f0dc73523cd13e284ce3d"
   },
-  "id": "PBGJaUxdEEZ4_j0YmXAZ3",
+  "id": "FFZEBO8a7DcyzSub6VvcO",
   "tags": []
 }
