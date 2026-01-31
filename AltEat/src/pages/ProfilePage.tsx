@@ -81,8 +81,12 @@ export default function ProfilePage() {
   }, [navigate]);
 
   useEffect(() => {
-    if (profile?.username) {
-      setTempUsername(profile.username);
+    if (profile) {
+      if (profile.username) setTempUsername(profile.username);
+      if (profile.languages?.length) setLanguagePreference(profile.languages[0]);
+      if (profile.cuisine_preferences) setCuisinePreferences(profile.cuisine_preferences);
+      if (profile.skill_level) setSkillLevel(profile.skill_level);
+      if (profile.avoid_ingredients) setAvoidIngredients(profile.avoid_ingredients);
     }
   }, [profile]);
 
@@ -156,13 +160,14 @@ export default function ProfilePage() {
       await supabase
         .from("profiles")
         .update({
-          languages: profile.languages,
-          cuisine: profile.cuisine_preferences,
-          skill_level: profile.skill_level,
-          avoid_ingredients: profile.avoid_ingredients,
+          languages: [languagePreference],
+          cuisine_preferences: cuisinePreferences,
+          skill_level: skillLevel,
+          avoid_ingredients: avoidIngredients,
         })
         .eq("id", profile.id);
 
+      await refreshProfile();
       setMessage({ type: "success", text: t("messages.preferencesSaved") });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message });

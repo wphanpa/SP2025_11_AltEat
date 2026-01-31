@@ -5,10 +5,12 @@ import recipe from "../assets/recipe.png";
 import context from "../assets/context.png";
 import subs from "../assets/subs.png";
 import RecipeCard from "../component/RecipeCard.tsx";
+import { usePersonalizedRecommendations } from "../hooks/usePersonalizedRecommendations";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase.tsx";
 import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
+
 
 function HomePage() {
   const navigate = useNavigate();
@@ -32,43 +34,9 @@ function HomePage() {
     },
   ];
 
-  const [recommendedRecipes, setRecommendedRecipes] = useState<any[]>([]);
-  const [loadingRecipes, setLoadingRecipes] = useState(true);
+  const { recipes: recommendedRecipes, loading: loadingRecipes } = usePersonalizedRecommendations(6);
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    const fetchRandomRecipes = async () => {
-      setLoadingRecipes(true);
-
-      const { data, error } = await supabase
-        .from("recipe_staging")
-        .select("*")
-        .limit(30);
-
-      if (error || !data) {
-        console.error("Failed to fetch recipes:", error);
-        setLoadingRecipes(false);
-        return;
-      }
-
-      const shuffled = [...data].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 6);
-
-      const normalized = selected.map((r) => ({
-        id: r.id,
-        title: r.recipe_name,
-        image: r.img_src || "/placeholder.svg",
-        tags: r.cuisine_path
-          ? r.cuisine_path.split("/").filter(Boolean).slice(0, 3)
-          : [],
-      }));
-
-      setRecommendedRecipes(normalized);
-      setLoadingRecipes(false);
-    };
-
-    fetchRandomRecipes();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
