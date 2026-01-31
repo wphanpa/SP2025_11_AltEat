@@ -25,6 +25,8 @@ class RecipeSuggestion:
     """Represents a recipe suggestion with ingredients."""
     name: str
     ingredients: str
+    id: Optional[int] = None
+    image: Optional[str] = None
 
 
 @dataclass

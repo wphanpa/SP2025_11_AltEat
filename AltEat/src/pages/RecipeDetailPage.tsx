@@ -35,7 +35,7 @@ export default function RecipeDetailPage() {
     data: recipe,
     loading,
     error,
-  } = useSupabaseFetch<Recipe>("recipe_staging", id);
+  } = useSupabaseFetch<Recipe>("recipes", id);
 
   const { recipes: recommendedRecipes, loading: recommendedLoading } =
     useRecommendedRecipes(recipe?.id || 0, recipe?.cuisine_path || "");

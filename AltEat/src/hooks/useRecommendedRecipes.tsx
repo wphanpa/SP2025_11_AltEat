@@ -28,7 +28,7 @@ export function useRecommendedRecipes(currentRecipeId: number, cuisinePath: stri
 
         // Fetch recipes with similar cuisine_path
         const { data, error } = await supabase
-          .from('recipe_staging')
+          .from('recipes')
           .select('id, recipe_name, cuisine_path, img_src, rating')
           .neq('id', currentRecipeId) // Exclude current recipe
           .order('rating', { ascending: false }) // Prioritize higher rated recipes

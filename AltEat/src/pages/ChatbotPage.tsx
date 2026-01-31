@@ -6,11 +6,21 @@ import type { User } from "@supabase/supabase-js"
 import Navbar from "../component/Navbar"
 import { MoreVertical, Edit2, Trash2, X, Check } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import RecipeCarousel from "../component/RecipeCarousel"
+
+interface Recipe {
+  name: string;
+  id: number;
+  image: string;
+  ingredients?: string;
+}
 
 interface ChatMessage {
   id: string
   role: "user" | "bot"
-  text: string
+  text?: string
+  recipes?: Recipe[]
+  type: "text" | "recipes"
 }
 
 interface ChatSession {
@@ -91,6 +101,17 @@ function ChatbotPage() {
       }
       setDeleteConfirmationId(null)
     }
+  }
+
+  const renderMessageText = (text: string) => {
+    if (!text) return null
+    const parts = text.split(/(\*\*[\s\S]*?\*\*)/g)
+    return parts.map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={index}>{part.slice(2, -2)}</strong>
+      }
+      return <span key={index}>{part}</span>
+    })
   }
 
 
@@ -188,11 +209,37 @@ function ChatbotPage() {
 
     if (!error && data) {
       setMessages(
-        data.map((msg) => ({
-          id: msg.message_id,
-          role: msg.sender_type as "user" | "bot",
-          text: msg.message_text,
-        })),
+        data.map((msg) => {
+          // Try to parse message_text as JSON to check if it's recipes
+          try {
+            const parsed = JSON.parse(msg.message_text)
+            if (Array.isArray(parsed) && parsed[0]?.recipes) {
+              return {
+                id: msg.message_id,
+                role: msg.sender_type as "user" | "bot",
+                recipes: parsed[0].recipes,
+                type: "recipes" as const,
+              }
+            }
+            if (parsed && parsed.recipes && Array.isArray(parsed.recipes)) {
+              return {
+                id: msg.message_id,
+                role: msg.sender_type as "user" | "bot",
+                recipes: parsed.recipes,
+                type: "recipes" as const,
+              }
+            }
+          } catch {
+            // Not JSON or not recipes format, treat as text
+          }
+          
+          return {
+            id: msg.message_id,
+            role: msg.sender_type as "user" | "bot",
+            text: msg.message_text,
+            type: "text" as const,
+          }
+        })
       )
     }
   }
@@ -250,6 +297,7 @@ function ChatbotPage() {
       id: userMessageId,
       role: "user",
       text: userMessage,
+      type: "text",
     }
     setMessages((prev) => [...prev, userMsg])
 
@@ -271,30 +319,54 @@ function ChatbotPage() {
         }),
       })
 
+      console.log("Response from n8n:", res)
       const data = await res.json()
 
-      // Parse bot response
-      let botResponse = ""
-      if (data.output) {
-        botResponse = data.output
-      } else if (data.text) {
-        botResponse = data.text
-      } else if (typeof data === "string") {
-        botResponse = data
+      // Check if response is recipes format
+      let botMessage: ChatMessage
+      let messageTextToSave: string
+
+      const recipesData = (Array.isArray(data) && data[0]?.recipes)
+        ? data[0].recipes
+        : (data?.recipes && Array.isArray(data.recipes) ? data.recipes : null);
+
+      if (recipesData) {
+        // Recipe carousel format
+        const botMessageId = generateId()
+        botMessage = {
+          id: botMessageId,
+          role: "bot",
+          recipes: recipesData,
+          type: "recipes",
+        }
+        messageTextToSave = JSON.stringify(data) // Save as JSON string
       } else {
-        botResponse = JSON.stringify(data, null, 2)
+        // Text format
+        let botResponse = ""
+        if (data.output) {
+          botResponse = data.output
+        } else if (data.text) {
+          botResponse = data.text
+        } else if (typeof data === "string") {
+          botResponse = data
+        } else {
+          botResponse = JSON.stringify(data, null, 2)
+        }
+
+        const botMessageId = generateId()
+        botMessage = {
+          id: botMessageId,
+          role: "bot",
+          text: botResponse,
+          type: "text",
+        }
+        messageTextToSave = botResponse
       }
 
-      const botMessageId = generateId()
-      const botMsg: ChatMessage = {
-        id: botMessageId,
-        role: "bot",
-        text: botResponse,
-      }
-      setMessages((prev) => [...prev, botMsg])
+      setMessages((prev) => [...prev, botMessage])
 
       // Save bot message to Supabase
-      await saveMessage(sessionId, botMessageId, "bot", botResponse)
+      await saveMessage(sessionId, botMessage.id, "bot", messageTextToSave)
     } catch (error) {
       console.error("Error sending message:", error)
       const errorMessageId = generateId()
@@ -302,9 +374,10 @@ function ChatbotPage() {
         id: errorMessageId,
         role: "bot",
         text: t("error.processing"),
+        type: "text",
       }
       setMessages((prev) => [...prev, errorMsg])
-      await saveMessage(sessionId, errorMessageId, "bot", errorMsg.text)
+      await saveMessage(sessionId, errorMessageId, "bot", errorMsg.text!)
     } finally {
       setIsLoading(false)
     }
@@ -485,13 +558,21 @@ function ChatbotPage() {
                       msg.role === "user" ? "flex flex-col items-end" : "flex flex-col items-start"
                     }`}
                   >
-                    <div
-                      className={`px-4 py-2 rounded-2xl text-sm ${
-                        msg.role === "user" ? "bg-[#FFCB69] rounded-br-sm" : "bg-gray-100 text-gray-800 rounded-bl-sm"
-                      }`}
-                    >
-                      <p className="whitespace-pre-wrap">{msg.text}</p>
-                    </div>
+                    {msg.type === "recipes" && msg.recipes ? (
+                      // Recipe Carousel Format
+                      <div className="w-full">
+                        <RecipeCarousel recipes={msg.recipes} />
+                      </div>
+                    ) : (
+                      // Text Format
+                      <div
+                        className={`px-4 py-2 rounded-2xl text-sm ${
+                          msg.role === "user" ? "bg-[#FFCB69] rounded-br-sm" : "bg-gray-100 text-gray-800 rounded-bl-sm"
+                        }`}
+                      >
+                        <p className="whitespace-pre-wrap">{renderMessageText(msg.text || "")}</p>
+                      </div>
+                    )}
 
                     {msg.role === "bot" && currentSessionId && (
                       <ChatFeedback messageId={msg.id} sessionId={currentSessionId} />

@@ -60,7 +60,7 @@ export function usePersonalizedRecommendations(limit: number = 6) {
           .join(',');
 
         const { data: preferredRecipes } = await supabase
-          .from('recipe_staging')
+          .from('recipes')
           .select('*')
           .or(cuisineFilters)
           .limit(50);
@@ -72,7 +72,7 @@ export function usePersonalizedRecommendations(limit: number = 6) {
 
       // Always fetch some general recipes to ensure variety or fallback
       const { data: generalRecipes, error: fetchError } = await supabase
-        .from('recipe_staging')
+        .from('recipes')
         .select('*')
         .limit(50);
 
@@ -135,7 +135,7 @@ export function usePersonalizedRecommendations(limit: number = 6) {
   const fetchRandomRecipes = async (limit: number) => {
     try {
       const { data, error } = await supabase
-        .from('recipe_staging')
+        .from('recipes')
         .select('*')
         .limit(30);
 

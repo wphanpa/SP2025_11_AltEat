@@ -58,7 +58,7 @@ function FavoritePage() {
 
       // Fetch recipes
       const { data: recipes, error: recipeError } = await supabase
-        .from("recipe_staging")
+        .from("recipes")
         .select("*")
         .in("id", recipeIds);
 

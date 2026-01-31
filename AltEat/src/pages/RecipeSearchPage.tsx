@@ -78,7 +78,7 @@ function RecipeSearchPage() {
 
     try {
       let query = supabase
-        .from("recipe_staging")
+        .from("recipes")
         .select("*", { count: "exact" })
 
       // Apply search query

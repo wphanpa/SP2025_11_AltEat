@@ -57,7 +57,7 @@ def substitute(req: SubstitutionRequest):
 @app.post("/suggest")
 def suggest(req: SuggestionRequest):
     recipes = recipe_service.get_suggestions(req.ingredients)
-    return {"recipes": [{"name": r.name, "ingredients": r.ingredients} for r in recipes]}
+    return {"recipes": [{"name": r.name, "ingredients": r.ingredients, "id": r.id, "image": r.image} for r in recipes]}
 
 @app.post("/lookup")
 def lookup(req: LookupRequest):

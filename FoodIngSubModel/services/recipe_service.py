@@ -5,11 +5,13 @@ Recipe Service for Recipe Suggestion System
 Service for recipe-related operations, delegating to OpenAI service for recipe suggestions.
 """
 
+import os
 from typing import List, Optional
 
 from config import Config
 from models import RecipeSuggestion
 from services.openai_service import OpenAIService
+from utils import logger
 
 
 class RecipeService:
@@ -18,11 +20,71 @@ class RecipeService:
     def __init__(self, config: Config):
         self.config = config
         self.openai_service = OpenAIService(config)
+        self._supabase = None
+        self._initialize_supabase()
+    
+    def _initialize_supabase(self):
+        """Initialize the Supabase client."""
+        url = os.getenv("VITE_SUPABASE_URL")
+        key = os.getenv("VITE_SUPABASE_ANON_KEY")
+        
+        if not url or not key:
+            return
+            
+        try:
+            from supabase import create_client
+            self._supabase = create_client(url, key)
+            logger.info("Supabase client initialized successfully")
+        except ImportError:
+            logger.warning("Supabase package not installed. Run `pip install supabase`.")
+        except Exception as e:
+            logger.error(f"Failed to initialize Supabase client: {e}")
+
+    def _get_supabase_suggestions(self, ingredients: List[str], limit: int) -> List[RecipeSuggestion]:
+        """Get suggestions from Supabase."""
+        if not self._supabase or not ingredients:
+            return []
+            
+        try:
+            # Construct OR filter to find recipes containing any of the ingredients
+            # Assumes 'recipes' table with 'ingredients' column
+            or_filter = ",".join(f"ingredients.ilike.%{ing.strip()}%" for ing in ingredients if ing.strip())
+            
+            if not or_filter:
+                return []
+                
+            response = self._supabase.table("recipes") \
+                .select("*") \
+                .or_(or_filter) \
+                .limit(limit) \
+                .execute()
+                
+            results = []
+            for record in response.data:
+                name = record.get("recipe_name") or record.get("title", "Unknown Recipe")
+                # ing_data = record.get("ingredients", "")
+                # ing_text = ", ".join(str(x) for x in ing_data) if isinstance(ing_data, list) else str(ing_data)
+                
+                results.append(RecipeSuggestion(name=name, ingredients="", id=record.get("id"), image=record.get("img_src")))
+                
+            print(f"Supabase returned {len(results)} recipes.")
+            return results
+        except Exception as e:
+            logger.error(f"Error querying Supabase: {e}")
+            return []
     
     def get_suggestions(self, ingredients: List[str],
                        max_results: Optional[int] = None) -> List[RecipeSuggestion]:
         """Get recipe suggestions based on available ingredients."""
         max_results = max_results or self.config.max_recipes
+        
+        # Try Supabase first
+        if self._supabase:
+            db_results = self._get_supabase_suggestions(ingredients, max_results)
+            if db_results:
+                print(f"Returning {len(db_results)} recipes from Supabase.")
+                print(db_results)
+                return db_results
         
         if not self.openai_service.is_available:
             return []
